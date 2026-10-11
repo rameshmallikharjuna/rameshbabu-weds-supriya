@@ -61,7 +61,7 @@ Leave these out or ask the user. Once the user confirms a new fact, add it to th
 - Website strings set in `assets/app.js`:
   - Share message: "You're invited to the wedding of Srinidhi & Shilpa. Muhurtham: Monday, 16th November 2026, 9:00 AM – 10:00 AM at Aarpee Ashraya Kalyana Mantapa, Bengaluru." The site URL is added after it.
   - Countdown end states: "The Muhurtham is happening now" (16 Nov, 9:00–10:00 AM IST), then "Thank you for your blessings".
-  - Status chips: "In N days", "Tomorrow", "Today · in Xh Ym", "Today", "Happening now", "Completed".
+  - Status chips, from the day before each ceremony: "Tomorrow", "Today · in Xh Ym", "Today", "Happening now", "Completed". Before that a ceremony shows no chip: the family asked to drop "In N days", and the countdown already shows the days left.
 - Website interface copy (section titles, button labels, hints) may be reworded, but it must never add facts.
 - Formats: write dates as "Monday, 16th November 2026" and times as "9:00 AM – 10:00 AM" (en dash, uppercase AM/PM). Spell the city "Bengaluru".
 
@@ -142,7 +142,7 @@ There are no frameworks and no build step. The only external resources are Googl
 3. **Couple** (`#couple`): the shloka and lead line, then arch cards for the groom and bride (honorific, name, and parents) joined by an "&" medallion.
 4. **Celebrations** (`#events`):
    - A Day 1 timeline (Varapuje, Sangeet, Reception) and the Day 2 Muhurtham plaque with kalashas.
-   - Every ceremony has a live status chip and an **Add to calendar** menu (Google Calendar or `.ics`).
+   - Every ceremony has an **Add to calendar** menu (Google Calendar or `.ics`) and, from the day before, a live status chip. From 480 px wide the chip and the button share a line, with the button on the right under its menu, even when there is no chip. On phones the chip sits above the button.
    - An "Add all four ceremonies" link downloads the combined `.ics`.
 5. **Venue** (`#venue`): the address, **Get directions**, **Copy address**, the map QR code, and an embedded Google Map.
 6. **Share** (`#share`):
@@ -156,7 +156,7 @@ There are no frameworks and no build step. The only external resources are Googl
 **Behaviour** (`assets/app.js`):
 
 - **Countdown**: counts down to 16 Nov 2026, 9:00 AM IST (`Date.UTC(2026, 10, 16, 3, 30)`) and ticks every second. When it reaches zero it shows the end states from section 2.
-- **Status chips**: read each card's `data-start` and optional `data-end` (ISO times from section 1). Calendar days are counted in IST, so "Today" and "Tomorrow" stay right for guests abroad. Chips refresh every 30 s.
+- **Status chips**: read each card's `data-start` and optional `data-end` (ISO times from section 1). Calendar days are counted in IST, so "Today" and "Tomorrow" stay right for guests abroad. Until the day before its ceremony a chip stays empty, and `.chip:empty` hides it. Chips refresh every 30 s.
 - **Calendar menus**: `<details class="cal">`, one open at a time. A menu closes on an outside click, on Escape (focus returns to its button), or after a choice.
 - **Copy**: uses the Clipboard API with a fallback, then shows a toast (`role="status"`).
 - **Share URL**: Share, WhatsApp, and Copy link all use the site root (`new URL('./', location.href)`).
@@ -284,7 +284,7 @@ export.ps1, .github/   tooling (harmless if published)
 - [ ] Website:
   - [ ] No horizontal scrolling at 360 px or 390 px wide or on desktop, and the dock never covers content.
   - [ ] No awkward one-word line endings.
-  - [ ] The countdown and chips are correct. Check them with a shifted clock on 15 Nov in the morning and afternoon, during the Muhurtham, and after it.
+  - [ ] The countdown and chips are correct. Check them with a shifted clock before 14 Nov (no chips), on 14 Nov, on 15 Nov in the morning and afternoon, during the Muhurtham, and after it.
   - [ ] The calendar menus, the `.ics` downloads, Copy address, Copy link, Share, and WhatsApp all work.
   - [ ] Keyboard: Tab reaches **Open invitation**, Escape opens the invitation, and focus lands on the names.
   - [ ] Every animation that runs on desktop also runs on phones, including phones set to reduce motion, and every section has visible motion.

@@ -309,6 +309,7 @@
   setInterval(tick, 1000);
 
   /* ---------- Event status chips (calendar days counted in IST) ---------- */
+  // A chip appears from the day before its ceremony; until then it stays empty (.chip:empty hides it).
   var IST_OFFSET = 330 * 60000;
   var DAY = 86400000;
   function istDay(ms) { return Math.floor((ms + IST_OFFSET) / DAY); }
@@ -326,12 +327,11 @@
       var start = Date.parse(card.getAttribute('data-start'));
       var endAttr = card.getAttribute('data-end');
       var end = endAttr ? Date.parse(endAttr) : 0;
-      var text, cls = '';
+      var text = '', cls = '';
       if (now < start) {
         var days = istDay(start) - istDay(now);
         if (days === 0) { text = 'Today \u00B7 in ' + untilText(start - now); cls = 'is-soon'; }
         else if (days === 1) { text = 'Tomorrow'; cls = 'is-soon'; }
-        else text = 'In ' + days + ' days';
       } else if (end && now < end) {
         text = 'Happening now'; cls = 'is-live';
       } else if (!end && istDay(now) === istDay(start)) {

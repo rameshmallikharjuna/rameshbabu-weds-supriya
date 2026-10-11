@@ -514,6 +514,10 @@ html:not(.js) .js-only { display: none !important; }
 .event-time { display: flex; align-items: center; gap: 8px; margin: 6px 0 12px; font-weight: 600; font-size: 20px; color: var(--sandal); }
 .event-time .i { width: 18px; height: 18px; color: var(--gold); }
 .event-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+/* From 480px even the longest chip shares a line with Add to calendar; the button keeps to the right, under its menu, also with no chip */
+@media (min-width: 480px) {
+  .event .cal { margin-left: auto; }
+}
 
 .chip {
   display: inline-flex; align-items: center; gap: 7px;
