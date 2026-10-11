@@ -867,10 +867,10 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
 <p class="music-credit" id="music-credit"><i>Haratanaya Sree</i> by Veena&nbsp;Raja&nbsp;Rao · veena: Veena&nbsp;Kinhal · public domain (<a href="https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao" target="_blank" rel="noopener">Internet&nbsp;Archive</a>)</p>
 <!-- Background music: "Haratanaya Sree" (raga Nata) by Veena Raja Rao, played on the veena by Veena Kinhal (2009),
      public domain: https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao (never take audio from YouTube).
-     It starts at data-play-from seconds (4.6, after a near-silent lead-in) and, on reaching data-play-to (266.5, once
+     It starts at data-play-from seconds (15, past the recording's opening) and, on reaching data-play-to (266.5, once
      the last note has rung out, skipping the silent ending), goes back there. Until the file is found, the button
      stays hidden. For another recording, update src, both data-play-* values and the credit above. -->
-<audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="4.6" data-play-to="266.5"></audio>
+<audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="15" data-play-to="266.5"></audio>
 
 <script>
 (function () {
@@ -880,7 +880,7 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   if (!btn || !audio || document.documentElement.classList.contains('export')) return;
 
   var song = 'Haratanaya Sree';
-  // The song starts at data-play-from seconds, skipping the recording's quiet lead-in. On reaching
+  // The song starts at data-play-from seconds, skipping the recording's opening. On reaching
   // data-play-to seconds (once the last note has rung out) or the end of the file, it goes back there.
   var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
   var endAt = parseFloat(audio.getAttribute('data-play-to')) || 0;

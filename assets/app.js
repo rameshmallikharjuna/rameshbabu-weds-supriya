@@ -41,7 +41,7 @@
   var musicCredit = $('#music-credit');
   var audioReady = false;
   var fadeTimer = 0;
-  // The song starts at data-play-from seconds, skipping the recording's quiet lead-in. On reaching
+  // The song starts at data-play-from seconds, skipping the recording's opening. On reaching
   // data-play-to seconds (once the last note has rung out) or the end of the file, it goes back there.
   var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
   var endAt = parseFloat(audio.getAttribute('data-play-to')) || 0;
