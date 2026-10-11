@@ -34,28 +34,42 @@
     }, 2400);
   }
 
-  /* ---------- Music (only if audio/seetha-kalyana-vaibhogame.mp3 exists) ---------- */
+  /* ---------- Music: audio/seetha-kalyana-vaibhogame.mp3 in the background (controls hide if it is missing) ---------- */
   var audio = $('#bgm');
   var musicBtn = $('#music');
   var openMusicBtn = $('[data-open-music]');
+  var musicCredit = $('#music-credit');
   var audioReady = false;
   var fadeTimer = 0;
+  // The song starts, and loops back, at data-play-from seconds, skipping the recording's intro.
+  var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
 
   function showMusic() {
     if (audioReady) return;
     audioReady = true;
     musicBtn.hidden = false;
+    musicCredit.hidden = false;
     if (!html.classList.contains('opened')) openMusicBtn.hidden = false;
   }
   function hideMusic() {
     audioReady = false;
     musicBtn.hidden = true;
+    musicCredit.hidden = true;
     openMusicBtn.hidden = true;
   }
   function setPlaying(on) {
     musicBtn.classList.toggle('is-playing', on);
     musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
     musicBtn.title = (on ? 'Pause' : 'Play') + ' music: Seetha Kalyana Vaibhogame';
+  }
+  function isPlaying() { return musicBtn.classList.contains('is-playing'); }
+  // data-play-from is ignored if the file is too short for it. Before the metadata loads (iOS), setting
+  // currentTime sets the position the browser starts from once it does.
+  function startPos() { return startAt > 0 && !(audio.duration <= startAt + 1) ? startAt : 0; }
+  function toStart() {
+    if (audio.currentTime < startPos()) {
+      try { audio.currentTime = startPos(); } catch (e) {}
+    }
   }
   // A timer, not requestAnimationFrame: rAF stops in background tabs and would leave a pause fade
   // unfinished. Volume must stay within [0, 1] or the browser throws. It is read-only on iOS, so the
@@ -75,6 +89,7 @@
   }
   function playMusic() {
     if (audio.paused) audio.volume = 0;
+    toStart();
     setPlaying(true);
     var p = audio.play();
     fadeTo(0.8, 1500);
@@ -85,10 +100,23 @@
     fadeTo(0, 500, function () { audio.pause(); });
   }
 
-  audio.addEventListener('loadedmetadata', showMusic);
+  audio.addEventListener('loadedmetadata', function () {
+    showMusic();
+    if (isPlaying()) toStart();
+  });
   audio.addEventListener('error', hideMusic);
   audio.addEventListener('play', function () { setPlaying(true); });
-  audio.addEventListener('pause', function () { setPlaying(false); });
+  // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass.
+  audio.addEventListener('pause', function () { if (!(audio.ended && startAt > 0)) setPlaying(false); });
+  if (startAt > 0) {
+    audio.loop = false; // the native loop would restart at 0:00
+    audio.addEventListener('ended', function () {
+      if (!isPlaying()) return;
+      audio.currentTime = startPos();
+      var p = audio.play();
+      if (p && p.catch) p.catch(function () { setPlaying(false); });
+    });
+  }
   if (audio.readyState > 0) showMusic();
   // iOS never preloads media, so also ask the server whether the file exists.
   if (/^https?:$/.test(location.protocol) && window.fetch) {
@@ -112,7 +140,7 @@
     if (withMusic) playMusic(); // must run inside the click for autoplay rules
     try { sessionStorage.setItem('sws-opened', '1'); } catch (e) {}
     intro.classList.add('is-opening');
-    var t = reduceMotion ? [0, 0, 450] : [300, 1250, 1900];
+    var t = reduceMotion ? [100, 800, 1250] : [300, 1500, 2100];
     setTimeout(function () { html.classList.add('revealed'); }, t[0]);
     setTimeout(function () { intro.classList.add('is-closing'); }, t[1]);
     setTimeout(function () {

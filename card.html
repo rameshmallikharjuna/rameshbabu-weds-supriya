@@ -179,7 +179,7 @@ body {
 .petals i:nth-child(4n+3) { --c: radial-gradient(circle at 35% 35%, #FFFFFF, #EADBB8 85%); }
 .petals i:nth-child(4n) { --c: radial-gradient(circle at 35% 35%, #FFE07A, #E8A317 75%); }
 
-/* Optional music. Plays a user-supplied file and hides itself if the file is missing. */
+/* Music: plays audio/seetha-kalyana-vaibhogame.mp3; the button stays hidden until the file is found. */
 .music {
   position: fixed;
   right: max(14px, env(safe-area-inset-right));
@@ -211,6 +211,28 @@ body {
 .music.is-playing svg { display: none; }
 .music.is-playing .eq { display: inline-flex; }
 .music-label { white-space: nowrap; }
+/* Credit for the recording, shown above the button for a few seconds when the song starts */
+.music-credit {
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 58px);
+  z-index: 10;
+  max-width: min(340px, calc(100vw - 28px));
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(226, 186, 98, .55);
+  border-radius: 12px;
+  background: rgba(42, 5, 12, .94);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .45);
+  color: #F3E2BF;
+  font: 500 12px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility 0s linear .3s;
+}
+.music-credit.is-shown { opacity: 1; visibility: visible; transition: opacity .3s ease; }
+.music-credit a { color: inherit; text-underline-offset: 2px; }
 
 /* Link back to the invitation website (index.html) */
 .back {
@@ -258,7 +280,7 @@ body {
   .content > :nth-child(5) { animation-delay: 1.05s; }
   .content > :nth-child(6) { animation-delay: 1.2s; }
   .content > :nth-child(7) { animation-delay: 1.35s; }
-  .sway { animation: sway 3.6s ease-in-out var(--d, 0s) infinite alternate; }
+  .sway { animation: sway 3s ease-in-out var(--d, 0s) infinite alternate; }
   .bell { animation: bell 3.4s ease-in-out infinite; }
   .bell-r { animation-delay: -1.7s; }
   .halo { animation: glow 3.2s ease-in-out infinite; }
@@ -276,12 +298,27 @@ body {
   .music .eq i:nth-child(3) { animation-delay: -.7s; }
   .music .eq i:nth-child(4) { animation-delay: -.2s; }
 }
+/* Reduced motion (an accessibility setting, also switched on by some battery savers): calmer, not frozen.
+   The card fades in, and the garland, bells and sparkles move gently twice and then rest. */
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: fade-in .8s ease both; }
+  .content > * { animation: fade-in .8s ease .3s both; }
+  .sway { animation: sway-calm 2.2s ease-in-out calc(var(--d, 0s) * -.12 + .5s) 2; }
+  .bell { animation: bell-calm 2.2s ease-in-out .7s 2; }
+  .bell-r { animation-delay: 1.1s; }
+  .sparkle { animation: glint 2s ease-in-out 1s 2; }
+  .sparkle:nth-of-type(even) { animation-delay: 1.5s; }
+}
 
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes sway-calm { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(4deg); } 70% { transform: rotate(-4deg); } }
+@keyframes bell-calm { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(5deg); } 70% { transform: rotate(-5deg); } }
+@keyframes glint { 0%, 100% { opacity: .9; } 50% { opacity: .3; } }
 @keyframes card-in { from { opacity: 0; transform: translateY(2.5vmin) scale(.97); } }
 @keyframes deco-in { from { opacity: 0; transform: translateY(-3%); } }
 @keyframes rise { from { opacity: 0; transform: translateY(calc(14 * var(--u))); } }
-@keyframes sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
-@keyframes bell { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes sway { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes bell { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
 @keyframes glow { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
 @keyframes flicker {
   0%, 100% { transform: scale(1, 1); opacity: 1; }
@@ -310,7 +347,7 @@ html.export, html.export body { background: var(--maroon-deep); }
 html.export body { display: block; min-height: 0; padding: 0; overflow: hidden; }
 html.export .card { width: 540px; border-radius: 0; box-shadow: none; }
 html.export *, html.export *::before, html.export *::after { animation: none !important; transition: none !important; }
-html.export .petals, html.export .music, html.export .back { display: none !important; }
+html.export .petals, html.export .music, html.export .music-credit, html.export .back { display: none !important; }
 
 @page { size: 5.625in 10in; margin: 0; }
 @media print {
@@ -318,7 +355,7 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
   body { display: block; min-height: 0; padding: 0; }
   .card { width: 5.625in; border-radius: 0; box-shadow: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .petals, .music, .back { display: none !important; }
+  .petals, .music, .music-credit, .back { display: none !important; }
   /* Real paper has its own texture; the simulated grain would only be rasterized into a heavy PDF. */
   .grain { display: none; }
 }
@@ -822,24 +859,38 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
   </article>
 </main>
 
-<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play music: Seetha Kalyana Vaibhogame" title="Play music: Seetha Kalyana Vaibhogame">
+<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play music: Seetha Kalyana Vaibhogame" title="Play music: Seetha Kalyana Vaibhogame" hidden>
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 18.5a3 3 0 1 1-2-2.83V5.2l11-2.2v12.5a3 3 0 1 1-2-2.83V7.06L9 8.46z"/></svg>
   <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
   <span class="music-label">Seetha Kalyana Vaibhogame</span>
 </button>
-<!-- Add your own licensed recording at audio/seetha-kalyana-vaibhogame.mp3. Without it the button stays hidden. -->
-<audio id="bgm" src="audio/seetha-kalyana-vaibhogame.mp3" preload="metadata" loop></audio>
+<p class="music-credit" id="music-credit"><i>Seetha Kalyana Vaibhogame</i> (Instrumental) · Phani&nbsp;Narayana · ℗&nbsp;2020 Strumm Entertainment</p>
+<!-- Background music: the instrumental "Seetha Kalyana Vaibhogame" by Phani Narayana (℗ 2020 Strumm Entertainment).
+     Add it as audio/seetha-kalyana-vaibhogame.mp3 only with the label's permission; never take audio from YouTube.
+     It starts, and loops back, at data-play-from seconds (0:32). Until the file exists, the button stays hidden.
+     For another recording, update data-play-from and the credit above. -->
+<audio id="bgm" src="audio/seetha-kalyana-vaibhogame.mp3" preload="metadata" loop data-play-from="32"></audio>
 
 <script>
 (function () {
   var btn = document.getElementById('music');
   var audio = document.getElementById('bgm');
+  var credit = document.getElementById('music-credit');
   if (!btn || !audio || document.documentElement.classList.contains('export')) return;
 
   var song = 'Seetha Kalyana Vaibhogame';
+  // The song starts, and loops back, at data-play-from seconds, skipping the recording's intro.
+  var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
   var on = false;
   var fadingOut = false;
   var timer;
+  var creditTimer;
+
+  function showCredit(show) {
+    clearTimeout(creditTimer);
+    credit.classList.toggle('is-shown', show);
+    if (show) creditTimer = setTimeout(function () { credit.classList.remove('is-shown'); }, 6000);
+  }
 
   function render() {
     var text = (on ? 'Pause' : 'Play') + ' music: ' + song;
@@ -864,30 +915,72 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
     }, 40);
   }
 
+  // data-play-from is ignored if the file is too short for it. Before the metadata loads (iOS), setting
+  // currentTime sets the position the browser starts from once it does.
+  function startPos() { return startAt > 0 && !(audio.duration <= startAt + 1) ? startAt : 0; }
+  function toStart() {
+    if (audio.currentTime < startPos()) {
+      try { audio.currentTime = startPos(); } catch (e) {}
+    }
+  }
+
+  // The button stays hidden until the file is found. iOS never preloads media, so also ask the server.
+  function reveal() { btn.hidden = false; }
+  audio.addEventListener('loadedmetadata', function () {
+    reveal();
+    if (on) toStart();
+  });
+  if (audio.readyState > 0) reveal();
+  if (/^https?:$/.test(location.protocol) && window.fetch) {
+    fetch(audio.currentSrc || audio.src, { method: 'HEAD', cache: 'no-store' })
+      .then(function (r) { if (r.ok) reveal(); })
+      .catch(function () {});
+  }
+
   audio.addEventListener('error', function () {
     on = false;
     render();
+    showCredit(false);
     btn.hidden = true;
   });
 
+  // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass.
   audio.addEventListener('pause', function () {
-    if (on && !fadingOut) {
+    if (on && !fadingOut && !(audio.ended && startAt > 0)) {
       on = false;
       render();
     }
   });
 
-  btn.addEventListener('click', function () {
-    on = !on;
-    render();
-    if (on) {
-      fadingOut = false;
-      if (audio.paused) audio.volume = 0;
+  if (startAt > 0) {
+    audio.loop = false; // the native loop would restart at 0:00
+    audio.addEventListener('ended', function () {
+      if (!on) return;
+      audio.currentTime = startPos();
       var played = audio.play();
       if (played && played.catch) {
         played.catch(function () {
           on = false;
           render();
+        });
+      }
+    });
+  }
+
+  btn.addEventListener('click', function () {
+    on = !on;
+    render();
+    showCredit(on);
+    if (on) {
+      fadingOut = false;
+      if (audio.paused) audio.volume = 0;
+      toStart();
+      var played = audio.play();
+      if (played && played.catch) {
+        played.catch(function () {
+          on = false;
+          render();
+          showCredit(false);
         });
       }
       fadeTo(0.8, 1500);

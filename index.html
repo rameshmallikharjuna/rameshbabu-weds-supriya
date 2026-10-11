@@ -24,7 +24,13 @@
 (function (html) {
   html.classList.add('js');
   try {
-    if (location.hash.length > 1 || sessionStorage.getItem('sws-opened')) html.classList.add('opened');
+    // The doors open once per visit and again on a reload. #section links and coming back to the page
+    // (the back button, or returning from the card) go straight to the invitation.
+    var perf = window.performance;
+    var nav = perf && perf.getEntriesByType ? perf.getEntriesByType('navigation')[0] : null;
+    var reload = nav ? nav.type === 'reload' : !!(perf && perf.navigation && perf.navigation.type === 1);
+    if (document.wasDiscarded) reload = false; // a tab the browser unloaded to save memory
+    if (!reload && (location.hash.length > 1 || sessionStorage.getItem('sws-opened'))) html.classList.add('opened');
   } catch (e) {}
   // If app.js never starts, fall back to the plain page: no doors, everything visible.
   setTimeout(function () { if (!window.SWS_READY) html.classList.remove('js'); }, 6000);
@@ -215,71 +221,71 @@
 <!--@INTRO-THORANA-->
     <path d="M0 6H1000" stroke="#7A5418" stroke-width="1.8"/>
     <path d="M0 6H1000" stroke="#E8C778" stroke-width="1.8" stroke-dasharray="1.8 1.6"/>
-    <g transform="translate(4 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(19.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(35 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(50.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(66 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(81.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(97 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(112.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(128 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(143.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(159 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(174.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(190 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(205.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(221 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(236.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(252 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(267.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(283 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(298.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(314 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(329.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(345 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(360.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(376 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(391.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(407 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(422.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(438 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(453.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(469 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(484.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(500 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(515.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(531 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(546.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(562 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(577.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(593 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(608.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(624 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(639.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(655 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(670.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(686 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(701.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(717 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(732.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(748 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(763.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(779 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(794.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(810 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(825.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(841 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(856.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(872 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(887.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(903 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(918.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(934 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(949.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(965 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
-    <g transform="translate(980.5 7) rotate(-5) scale(0.86)"><use href="#leaf" fill="url(#g-leaf2)"/></g>
-    <g transform="translate(996 7) rotate(5) scale(1)"><use href="#leaf" fill="url(#g-leaf)"/></g>
+    <g transform="translate(4 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.00s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(19.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.83s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(35 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.66s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(50.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.49s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(66 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.32s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(81.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.55s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(97 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.38s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(112.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.21s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(128 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.04s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(143.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.27s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(159 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.10s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(174.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.93s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(190 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.76s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(205.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-3.59s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(221 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.82s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(236.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.65s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(252 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.48s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(267.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-3.31s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(283 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.54s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(298.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.37s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(314 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.20s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(329.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-3.03s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(345 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.26s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(360.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.09s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(376 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.92s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(391.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.75s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(407 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.58s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(422.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.81s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(438 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.64s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(453.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.47s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(469 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.30s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(484.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.53s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(500 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.36s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(515.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.19s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(531 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.02s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(546.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.25s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(562 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.08s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(577.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.91s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(593 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.74s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(608.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-3.57s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(624 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.80s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(639.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.63s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(655 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.46s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(670.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-3.29s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(686 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.52s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(701.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.35s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(717 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.18s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(732.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-3.01s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(748 7) rotate(5) scale(1)"><g class="sway" style="--d:-0.24s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(763.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.07s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(779 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.90s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(794.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.73s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(810 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.56s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(825.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.79s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(841 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.62s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(856.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.45s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(872 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.28s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(887.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.51s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(903 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.34s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(918.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-2.17s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(934 7) rotate(5) scale(1)"><g class="sway" style="--d:-3.00s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(949.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-0.23s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(965 7) rotate(5) scale(1)"><g class="sway" style="--d:-1.06s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
+    <g transform="translate(980.5 7) rotate(-5) scale(0.86)"><g class="sway" style="--d:-1.89s"><use href="#leaf" fill="url(#g-leaf2)"/></g></g>
+    <g transform="translate(996 7) rotate(5) scale(1)"><g class="sway" style="--d:-2.72s"><use href="#leaf" fill="url(#g-leaf)"/></g></g>
     <use href="#marigold" x="27.25" y="6"/>
     <use href="#marigold" x="58.25" y="6"/>
     <use href="#marigold" x="89.25" y="6"/>
@@ -712,6 +718,7 @@
     <p class="footer-kn kn" lang="kn">ತಮ್ಮ ಆಗಮನಾಭಿಲಾಷಿಗಳು</p>
     <p class="footer-await">Eagerly awaiting your gracious presence</p>
     <p class="footer-from">With love &amp; regards, the families of <span class="nw">Srinidhi &amp; Shilpa</span></p>
+    <p class="footer-credit" id="music-credit" hidden>Music: <i>Seetha Kalyana Vaibhogame</i> (Instrumental) by Phani&nbsp;Narayana, from <i>Mood Music – Devotional Instrumentals of South India</i>, ℗&nbsp;2020 Strumm Entertainment Pvt.&nbsp;Ltd.</p>
   </div>
 </footer>
 
@@ -732,8 +739,11 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
-<!-- Add your own licensed recording at audio/seetha-kalyana-vaibhogame.mp3. Without it the music buttons stay hidden. -->
-<audio id="bgm" src="audio/seetha-kalyana-vaibhogame.mp3" preload="metadata" loop></audio>
+<!-- Background music: the instrumental "Seetha Kalyana Vaibhogame" by Phani Narayana (℗ 2020 Strumm Entertainment).
+     Add it as audio/seetha-kalyana-vaibhogame.mp3 only with the label's permission; never take audio from YouTube.
+     It starts, and loops back, at data-play-from seconds (0:32). Until the file exists, the music buttons and the
+     footer credit stay hidden. For another recording, update data-play-from and the footer credit. -->
+<audio id="bgm" src="audio/seetha-kalyana-vaibhogame.mp3" preload="metadata" loop data-play-from="32"></audio>
 
 </body>
 </html>

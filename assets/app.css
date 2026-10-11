@@ -139,11 +139,11 @@ html:not(.js) .js-only { display: none !important; }
 /* ---------- Intro: temple doors ---------- */
 .intro { display: none; }
 .js .intro {
+  --door-depth: clamp(480px, 125vw, 1800px);
   position: fixed; inset: 0; z-index: 100;
   display: grid; place-items: center;
   padding: calc(var(--thorana-h) + 8px) 12px 12px;
   overflow: hidden;
-  perspective: 1700px;
 }
 .js.opened .intro { display: none; }
 
@@ -164,10 +164,16 @@ html:not(.js) .js-only { display: none !important; }
     inset 0 0 0 12px #5A0B18,
     inset 0 0 0 13px rgba(240, 213, 140, .45),
     inset 0 0 70px rgba(0, 0, 0, .4);
+  /* The perspective is part of each door's own transform because WebKit (Safari and every iPhone browser)
+     ignores a parent's perspective here and would only squash the doors flat. The two translates put the
+     vanishing point at the centre of the screen: 99% of a door's width is half the screen. */
+  --door-turn: 0deg;
+  transform: translateX(var(--door-x)) perspective(var(--door-depth)) translateX(calc(-1 * var(--door-x))) rotateY(var(--door-turn));
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-.door-l { left: 0; transform-origin: 0 50%; }
-.door-r { right: 0; transform-origin: 100% 50%; }
+.door-l { left: 0; transform-origin: 0 50%; --door-x: 99%; }
+.door-r { right: 0; transform-origin: 100% 50%; --door-x: -99%; }
 .door::before, .door::after {
   content: ""; position: absolute; top: 30px; bottom: 30px; width: 12px;
   background: radial-gradient(circle, #F8E3A6 0 2.4px, #B9852D 3px, rgba(0, 0, 0, .35) 3.7px, transparent 4.3px) 50% 0 / 12px 34px repeat-y;
@@ -258,14 +264,19 @@ html:not(.js) .js-only { display: none !important; }
 .intro.is-closing { opacity: 0; transition: opacity .6s ease; }
 .intro.is-opening .intro-card { opacity: 0; transform: translateY(-10px) scale(.97); transition: opacity .45s ease, transform .45s ease; }
 @media (prefers-reduced-motion: no-preference) {
-  .door { transition: transform 1.6s cubic-bezier(.55, .05, .25, 1) .2s, opacity .5s ease 1.25s; }
-  .intro.is-opening .door-l { transform: rotateY(100deg); opacity: 0; }
-  .intro.is-opening .door-r { transform: rotateY(-100deg); opacity: 0; }
+  .door { transition: transform 1.5s cubic-bezier(.45, .05, .3, 1) .12s, opacity .45s ease 1.2s; }
+  .intro.is-opening .door-l { --door-turn: 100deg; opacity: 0; }
+  .intro.is-opening .door-r { --door-turn: -100deg; opacity: 0; }
   .intro.is-opening .intro-light { animation: door-light 1.7s ease .15s both; }
-  .intro.is-opening .intro-thorana { opacity: 0; transition: opacity .5s ease 1s; }
+  .intro.is-opening .intro-thorana { opacity: 0; transition: opacity .5s ease 1.1s; }
   .intro-card { animation: rise .9s var(--ease) .15s backwards; }
 }
+/* Reduced motion: a calmer opening. The doors turn a little as they fade, with no flying or spinning. */
 @media (prefers-reduced-motion: reduce) {
+  .door { transition: transform 1s ease-out, opacity .7s ease .2s; }
+  .intro.is-opening .door-l { --door-turn: 30deg; opacity: 0; }
+  .intro.is-opening .door-r { --door-turn: -30deg; opacity: 0; }
+  .intro.is-opening .intro-light { animation: door-glow 1s ease both; }
   .intro.is-closing { transition-duration: .45s; }
 }
 
@@ -641,6 +652,9 @@ html:not(.js) .js-only { display: none !important; }
 .footer-kn { margin: 10px 0 6px; font-size: 22px; line-height: 1.6; color: var(--gold-light); }
 .footer-await { font: italic 600 22px/1.4 var(--f-serif); }
 .footer-from { margin-top: 4px; font-size: 17px; color: rgba(243, 226, 191, .85); }
+.footer-credit { max-width: 36em; margin: 26px auto 0; font: 12.5px/1.55 var(--f-ui); color: rgba(243, 226, 191, .72); }
+.footer-credit a { color: inherit; text-underline-offset: 2px; }
+.footer-credit a:hover { color: var(--gold-pale); }
 
 /* ---------- Dock navigation ---------- */
 .dock {
@@ -701,7 +715,7 @@ html:not(.js) .js-only { display: none !important; }
   .js:not(.revealed) .dock { opacity: 0; }
   .js.revealed .dock { animation: dock-in .7s var(--ease) .7s backwards; }
 
-  .sway { animation: sway 3.6s ease-in-out var(--d, 0s) infinite alternate; }
+  .sway { animation: sway 3s ease-in-out var(--d, 0s) infinite alternate; }
   .bell { animation: bell 3.4s ease-in-out infinite; }
   .bell-r { animation-delay: -1.7s; }
   .flame { animation: flicker 1.7s ease-in-out infinite; }
@@ -721,6 +735,19 @@ html:not(.js) .js-only { display: none !important; }
   .cal[open] .cal-menu { animation: pop .18s ease-out; }
   .btn-gold:hover, .btn-maroon:hover { transform: translateY(-1px); }
 }
+/* Reduced motion (an accessibility setting, also switched on by some battery savers): calmer, not frozen.
+   The hero fades in, and the garland, bells and sparkles move gently twice and then rest, all within five
+   seconds. No petals, sliding or spinning. */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-rise] { opacity: 0; }
+  .js.revealed [data-rise] { opacity: 1; transition: opacity .8s ease calc(var(--i, 0) * .06s + .1s); }
+  .intro-thorana .sway,
+  .js.revealed .hero-thorana .sway { animation: sway-calm 2.2s ease-in-out calc(var(--d, 0s) * -.12) 2; }
+  .js.revealed .bell { animation: bell-calm 2.2s ease-in-out .3s 2; }
+  .js.revealed .bell-r { animation-delay: .7s; }
+  .js.revealed .hero-names .sparkle { animation: glint 2s ease-in-out .5s 2; }
+  .js.revealed .hero-names .sparkle:nth-of-type(even) { animation-delay: 1s; }
+}
 
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(26px); } }
@@ -730,8 +757,12 @@ html:not(.js) .js-only { display: none !important; }
   40% { opacity: 1; }
   100% { opacity: 0; transform: scale(1.5); }
 }
-@keyframes sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
-@keyframes bell { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes door-glow { 0%, 100% { opacity: 0; } 40% { opacity: .85; } }
+@keyframes sway { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes bell { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes sway-calm { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(4deg); } 70% { transform: rotate(-4deg); } }
+@keyframes bell-calm { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(5deg); } 70% { transform: rotate(-5deg); } }
+@keyframes glint { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 @keyframes flicker {
   0%, 100% { transform: scale(1, 1); opacity: 1; }
   25% { transform: scale(.93, 1.07); }
