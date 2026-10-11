@@ -43,6 +43,11 @@ Leave these out or ask the user. Once the user confirms a new fact, add it to th
 ## 2. Wording
 
 - English is the main language. Use Kannada for the invocation, shloka, title, ceremony names, and sign-off. Wrap Kannada in `lang="kn"`.
+- The card also comes in an **English** version (`card.html?lang=en`, section 5) for guests who don't read Kannada. It writes the invocation, shloka, and title in English letters and leaves out the other Kannada lines:
+  - `॥ Sri Ganeshaya Namah ॥` (the ॥ marks use the Kannada font)
+  - `Vakratunda Mahakaya Suryakoti Samaprabha ।` / `Nirvighnam Kuru Me Deva Sarvakaryeshu Sarvada ॥`
+  - `Shubha Vivaha` (title)
+  - The ceremony names appear in English only, and the closing line "Eagerly awaiting your gracious presence" takes the Kannada sign-off's place.
 - Keep the tone formal, warm, and reverent. Don't use slang, emojis, or hashtags.
 - Use these Kannada strings verbatim. Don't write new Kannada sentences unless the user has reviewed them:
   - `॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ ॥`: Salutations to Lord Ganesha (invocation)
@@ -143,6 +148,7 @@ There are no frameworks and no build step. The only external resources are Googl
 6. **Share** (`#share`):
    - A tilted preview of the card that opens `card.html`.
    - **Share** (Web Share API, shown only where the browser supports it), **WhatsApp**, and **Copy link**.
+   - A **Card language** picker (`fieldset.card-lang`, JavaScript only): **Kannada + English** (the default) or **English**. It swaps the preview image, the downloads, and the animated card link to that version. Each swapped link or image keeps its English address in `data-href-en`, `data-src-en`, or `data-alt-en`; without JavaScript the picker hides and the links stay on Kannada + English.
    - Downloads: card PNG, printable PDF, and the animated card.
 7. **Footer**: the Kannada sign-off and the English closing.
 8. **Dock**: fixed bottom navigation (Home, Couple, Events, Venue, Share) with a scrollspy, plus the music toggle when the audio file exists. The hero and footer reserve `--dock-space` so the dock never covers content.
@@ -204,8 +210,11 @@ There are no frameworks and no build step. The only external resources are Googl
   7. Venue with the map QR code and link
   8. Kannada sign-off and English closing
 - **Entrance**: the card fades and settles in, the thorana drops in, and the sections rise in one after another from top to bottom.
+- **English version**: adding `?lang=en` to the URL (the head script adds `html.lang-en`) shows the English card from section 2.
+  - Elements with class `kn` are hidden, and `.en-only` elements appear: the English invocation, shloka, and title, plus a second diamond so the plaque reads "◆ Muhurtham ◆". Everything else is shared, so a change to the card changes both versions.
+  - Without `?lang=en` the card is exactly the Kannada + English card.
 - **Export and print**:
-  - Adding `?export` to the URL renders the bare, motionless card at exactly 540 × 960. It also hides the petals, the music button, and the back link.
+  - Adding `?export` to the URL renders the bare, motionless card at exactly 540 × 960. It also hides the petals, the music button, and the back link. It combines with `lang=en` (`card.html?export&lang=en`).
   - Print uses `@page { size: 5.625in 10in; margin: 0 }` with `print-color-adjust: exact`. Print also drops the simulated paper grain to keep the PDF small.
 
 ## 6. Music (both pages)
@@ -244,12 +253,13 @@ There are no frameworks and no build step. The only external resources are Googl
 index.html  card.html  .nojekyll  .gitattributes
 assets/     app.css, app.js, favicon.svg
 calendar/   five .ics files
-exports/    srinidhi-weds-shilpa-invitation.png / .pdf / -preview.jpg
+exports/    srinidhi-weds-shilpa-invitation.png / .pdf / -preview.jpg (Kannada + English)
+            srinidhi-weds-shilpa-invitation-english.png / .pdf / -preview.jpg (English)
 audio/      haratanaya-sree.mp3 (public domain; see section 6)
 export.ps1, .github/   tooling (harmless if published)
 ```
 
-- **Exports**: run `powershell -ExecutionPolicy Bypass -File .\export.ps1` after every change to `card.html`. It renders `card.html?export` with headless Microsoft Edge and writes three files to `exports/`:
+- **Exports**: run `powershell -ExecutionPolicy Bypass -File .\export.ps1` after every change to `card.html`. It renders `card.html?export` (Kannada + English) and `card.html?export&lang=en` (English, files ending `-english`) with headless Microsoft Edge, and writes three files of each to `exports/`:
   - PNG: 1080 × 1920, for WhatsApp
   - PDF: 5.625 × 10 in, for print
   - Preview JPG: 540 × 960, used by the website's Share section
@@ -281,6 +291,7 @@ export.ps1, .github/   tooling (harmless if published)
   - [ ] Phones (360–412 px wide, plus landscape) show the doors turning in 3D, the garland and bells swaying, and no horizontal scrolling. Check with a WebKit (iPhone) and a Chromium (Android) engine.
   - [ ] Without the MP3, the only console errors are the expected 404s for it.
 - [ ] Card: nothing overflows or touches the frame, the thorana, or the bells. The animations never appear in the PNG or PDF.
+- [ ] Both card versions: the English card (`card.html?lang=en`, the `-english` files) shows no Kannada letters, and the Kannada + English card shows no English-only lines. The Share section's **Card language** picker switches the preview, the PNG, the PDF, and the animated card link.
 - [ ] Music is on by default: it starts with **Open invitation** (or the first tap when the doors are skipped, and on the card), plays as background audio with no visible player, starts at `data-play-from` (35 s), goes back there from `data-play-to` (266.5 s), toggles play/pause with a fade, and stays off for the visit once the guest turns it off. Its controls are hidden when `audio/haratanaya-sree.mp3` is missing. The recording is public domain or properly licensed, no credit text is shown, and nothing is taken from YouTube or streaming services.
-- [ ] After every change to `card.html`, re-export and visually check the PNG, PDF, and preview JPG.
+- [ ] After every change to `card.html`, re-export and visually check the PNG, PDF, and preview JPG of both versions.
 - [ ] No invented facts and no visible placeholders.

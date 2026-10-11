@@ -1,13 +1,15 @@
 <#
 .SYNOPSIS
-    Exports card.html to a WhatsApp-ready PNG, a print-ready PDF and a small preview JPEG.
+    Exports card.html to WhatsApp-ready PNGs, print-ready PDFs and small preview JPEGs, for both
+    versions of the card: Kannada + English, and English.
 
 .DESCRIPTION
     Uses headless Microsoft Edge to render card.html?export (the bare 540 x 960 card, no motion,
-    no petals, no buttons). Writes to the exports folder next to this script:
-      - <Name>.png          1080 x 1920 at the default -Scale 2
-      - <Name>.pdf          one 5.625 x 10 in page
-      - <Name>-preview.jpg  540 x 960, used by the Share section of index.html
+    no petals, no buttons), and card.html?export&lang=en for the English card. Writes to the
+    exports folder next to this script:
+      - <Name>.png, <Name>-english.png                  1080 x 1920 at the default -Scale 2
+      - <Name>.pdf, <Name>-english.pdf                  one 5.625 x 10 in page
+      - <Name>-preview.jpg, <Name>-english-preview.jpg  540 x 960, used by the Share section of index.html
     Re-run after every change to card.html.
 
 .EXAMPLE
@@ -34,7 +36,12 @@ $edge = @(
 ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
 if (-not $edge) { throw 'Microsoft Edge was not found. Install it or edit the path list in export.ps1.' }
 
-$url = ([System.Uri]$html).AbsoluteUri + '?export'
+$cardUrl = ([System.Uri]$html).AbsoluteUri
+$variants = @(
+    @{ Name = $Name; Query = '?export' },                    # Kannada + English
+    @{ Name = "$Name-english"; Query = '?export&lang=en' }   # English
+)
+
 # A separate profile keeps headless Edge from handing the job to an Edge window that is already open.
 # It is kept between runs: on some managed PCs the first run in a brand-new profile stalls while Edge
 # sets up work-account sign-in, and later runs in the same profile finish in seconds.
@@ -49,7 +56,7 @@ function Invoke-Edge([string[]]$EdgeArgs, [string]$Output) {
     # gets a time limit and one retry. Edge's console noise goes to logs inside the profile folder.
     $argLine = ($EdgeArgs | ForEach-Object { if ($_ -match '\s') { '"{0}"' -f $_ } else { $_ } }) -join ' '
     New-Item -ItemType Directory -Force -Path $profileDir | Out-Null
-    $tag = [IO.Path]::GetExtension($Output).TrimStart('.')
+    $tag = [IO.Path]::GetFileName($Output)
     for ($attempt = 1; $attempt -le 2; $attempt++) {
         $process = Start-Process -FilePath $edge -ArgumentList $argLine -NoNewWindow -PassThru `
             -RedirectStandardOutput (Join-Path $profileDir "edge-$tag-$attempt.out.log") `
@@ -64,18 +71,10 @@ function Invoke-Edge([string[]]$EdgeArgs, [string]$Output) {
     }
 }
 
-$png = Join-Path $outDir "$Name.png"
-$pdf = Join-Path $outDir "$Name.pdf"
-$jpg = Join-Path $outDir "$Name-preview.jpg"
-Remove-Item -LiteralPath $png, $pdf, $jpg -ErrorAction SilentlyContinue
-
-Invoke-Edge ($common + @('--window-size=540,960', "--force-device-scale-factor=$Scale", "--screenshot=$png", $url)) $png
-Invoke-Edge ($common + @('--no-pdf-header-footer', "--print-to-pdf=$pdf", $url)) $pdf
-
-if (Test-Path -LiteralPath $png) {
+function Save-Preview([string]$Png, [string]$Jpg) {
     # A light 540 x 960 copy for the website's Share section, so phones don't download the full PNG.
     Add-Type -AssemblyName System.Drawing
-    $source = [System.Drawing.Image]::FromFile($png)
+    $source = [System.Drawing.Image]::FromFile($Png)
     try {
         $preview = New-Object System.Drawing.Bitmap 540, 960
         $graphics = [System.Drawing.Graphics]::FromImage($preview)
@@ -85,7 +84,7 @@ if (Test-Path -LiteralPath $png) {
         $codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
         $quality = New-Object System.Drawing.Imaging.EncoderParameters 1
         $quality.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), ([long]84)
-        $preview.Save($jpg, $codec, $quality)
+        $preview.Save($Jpg, $codec, $quality)
     } finally {
         if ($graphics) { $graphics.Dispose() }
         if ($preview) { $preview.Dispose() }
@@ -93,7 +92,21 @@ if (Test-Path -LiteralPath $png) {
     }
 }
 
-foreach ($file in $png, $pdf, $jpg) {
+$files = @()
+foreach ($variant in $variants) {
+    $url = $cardUrl + $variant.Query
+    $png = Join-Path $outDir "$($variant.Name).png"
+    $pdf = Join-Path $outDir "$($variant.Name).pdf"
+    $jpg = Join-Path $outDir "$($variant.Name)-preview.jpg"
+    Remove-Item -LiteralPath $png, $pdf, $jpg -ErrorAction SilentlyContinue
+
+    Invoke-Edge ($common + @('--window-size=540,960', "--force-device-scale-factor=$Scale", "--screenshot=$png", $url)) $png
+    Invoke-Edge ($common + @('--no-pdf-header-footer', "--print-to-pdf=$pdf", $url)) $pdf
+    if (Test-Path -LiteralPath $png) { Save-Preview $png $jpg }
+    $files += $png, $pdf, $jpg
+}
+
+foreach ($file in $files) {
     if (-not (Test-Path -LiteralPath $file)) { throw "Export failed: $file was not created." }
     '{0}  ({1:N0} KB)' -f $file, ((Get-Item -LiteralPath $file).Length / 1KB)
 }

@@ -411,6 +411,29 @@
   var whatsapp = $('[data-whatsapp]');
   whatsapp.href = 'https://wa.me/?text=' + encodeURIComponent(shareText + '\n' + pageUrl);
 
+  /* ---------- Card language ---------- */
+  // The card comes in Kannada + English (the links in the markup) and in English (each link or image's
+  // data-href-en / data-src-en / data-alt-en). The picker in Share swaps them.
+  var langSwaps = $$('[data-href-en], [data-src-en], [data-alt-en]').map(function (el) {
+    var attrs = ['href', 'src', 'alt'].filter(function (a) { return el.hasAttribute('data-' + a + '-en'); });
+    return { el: el, attrs: attrs, kn: attrs.map(function (a) { return el.getAttribute(a); }) };
+  });
+  var langInputs = $$('input[name="card-lang"]');
+  function syncCardLang() {
+    var picked = langInputs.filter(function (input) { return input.checked; })[0];
+    var en = !!picked && picked.value === 'en';
+    langSwaps.forEach(function (s) {
+      s.attrs.forEach(function (a, i) {
+        var value = en ? s.el.getAttribute('data-' + a + '-en') : s.kn[i];
+        if (s.el.getAttribute(a) !== value) s.el.setAttribute(a, value);
+      });
+    });
+  }
+  langInputs.forEach(function (input) { input.addEventListener('change', syncCardLang); });
+  syncCardLang();
+  // The browser may bring back the guest's choice on Back or a reload.
+  window.addEventListener('pageshow', syncCardLang);
+
   /* ---------- Dock scrollspy ---------- */
   var navLinks = $$('.dock-nav a');
   function setActive(id) {

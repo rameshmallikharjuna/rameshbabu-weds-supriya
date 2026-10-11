@@ -12,6 +12,6 @@ Follow [wedding-invitation.instructions.md](../instructions/wedding-invitation.i
    - The website: `index.html`, `assets/app.css`, and `assets/app.js`. This includes the countdown, the status-chip `data-start`/`data-end` times, the share text, and the Google Calendar links.
    - The card: `card.html`.
    - The calendar files in `calendar/`, if a time, title, or the venue changes.
-3. If `card.html` changed, run `powershell -ExecutionPolicy Bypass -File .\export.ps1` to regenerate the PNG, PDF, and preview JPG in `exports/`. Open the PNG and check it against the quality checklist.
+3. If `card.html` changed, run `powershell -ExecutionPolicy Bypass -File .\export.ps1` to regenerate the PNG, PDF, and preview JPG of both card versions (Kannada + English, and English) in `exports/`. Open both PNGs and check them against the quality checklist.
 4. Check the website over HTTP (`python -m http.server 8000 --bind 127.0.0.1`) at phone width (360–390 px) and on desktop. Work through the website items in the quality checklist, and fix and re-check until every item passes.
 5. Reply with a short summary of what changed, the files touched, and the local URL to preview.

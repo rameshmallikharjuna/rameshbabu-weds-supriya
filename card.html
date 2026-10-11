@@ -14,6 +14,7 @@
 <script>
 (function (html) {
   if (/[?&]export(?:[=&]|$)/.test(location.search)) html.classList.add('export');
+  if (/[?&]lang=en(?:&|$)/.test(location.search)) html.classList.add('lang-en');
 })(document.documentElement);
 </script>
 <style>
@@ -165,6 +166,17 @@ body {
 .closing .kn { font-size: calc(18 * var(--u)); line-height: 1.3; color: var(--maroon); }
 .closing .await { font-style: italic; font-weight: 600; font-size: calc(15 * var(--u)); line-height: 1.25; margin-top: calc(1 * var(--u)); }
 .closing .from { font-weight: 600; font-size: calc(13.5 * var(--u)); line-height: 1.25; color: var(--gold-deep); margin-top: calc(2 * var(--u)); }
+
+/* ?lang=en: the English card. The invocation, shloka and title appear in English letters; the other Kannada lines
+   are left out, and the English closing line takes the sign-off's place. */
+html:not(.lang-en) .en-only, html.lang-en .kn { display: none !important; }
+.danda { font-family: var(--f-kn); font-style: normal; font-weight: 400; letter-spacing: 0; }
+.invoke-en { font-family: var(--f-caps); font-weight: 700; font-size: calc(14 * var(--u)); letter-spacing: .08em; }
+.invoke-en .danda { font-size: 1.3em; line-height: 0; }
+.shloka-en { font-style: italic; font-weight: 600; font-size: calc(13 * var(--u)); line-height: 1.4; }
+.title-en { font-family: var(--f-caps); font-weight: 700; font-size: calc(19 * var(--u)); letter-spacing: .12em; margin-right: -.12em; }
+html.lang-en .plaque-label span { margin-right: -.2em; }
+html.lang-en .closing .await { font-size: calc(18 * var(--u)); color: var(--maroon); }
 
 /* Pushpa vrishti: falling petals, visible only while animating */
 .petals { overflow: hidden; }
@@ -642,10 +654,12 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
         </svg>
         <p class="kn invoke" lang="kn">॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ ॥</p>
         <p class="kn shloka" lang="kn">ವಕ್ರತುಂಡ ಮಹಾಕಾಯ ಸೂರ್ಯಕೋಟಿ ಸಮಪ್ರಭ ।<br>ನಿರ್ವಿಘ್ನಂ ಕುರು ಮೇ ದೇವ ಸರ್ವಕಾರ್ಯೇಷು ಸರ್ವದಾ ॥</p>
+        <p class="invoke invoke-en en-only"><span class="danda" aria-hidden="true">॥</span> Sri Ganeshaya Namah <span class="danda" aria-hidden="true">॥</span></p>
+        <p class="shloka shloka-en en-only">Vakratunda Mahakaya Suryakoti Samaprabha <span class="danda" aria-hidden="true">।</span><br>Nirvighnam Kuru Me Deva Sarvakaryeshu Sarvada <span class="danda" aria-hidden="true">॥</span></p>
       </header>
 
       <section class="intro">
-        <p class="title"><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg><span class="kn" lang="kn">ಶುಭ ವಿವಾಹ</span><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg></p>
+        <p class="title"><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg><span class="kn" lang="kn">ಶುಭ ವಿವಾಹ</span><span class="title-en en-only">Shubha Vivaha</span><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg></p>
         <p class="lead">With the blessings of the Almighty and our elders, we joyfully invite you and your family to the auspicious wedding of</p>
       </section>
 
@@ -740,7 +754,7 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
       <section class="muhurtham" aria-label="Muhurtham">
         <svg class="kalasha" aria-hidden="true" focusable="false"><use href="#kalasha"/></svg>
         <div class="plaque">
-          <p class="plaque-label"><span class="kn" lang="kn">ಶುಭ ಮುಹೂರ್ತ</span><i class="dot" aria-hidden="true"></i><span>Muhurtham</span></p>
+          <p class="plaque-label"><span class="kn" lang="kn">ಶುಭ ಮುಹೂರ್ತ</span><i class="dot" aria-hidden="true"></i><span>Muhurtham</span><i class="dot en-only" aria-hidden="true"></i></p>
           <p class="plaque-date">Monday, 16th November 2026</p>
           <p class="plaque-time">9:00 AM – 10:00 AM</p>
         </div>
