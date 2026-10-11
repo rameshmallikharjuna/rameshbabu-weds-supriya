@@ -832,10 +832,11 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
 </button>
 <!-- Background music: "Haratanaya Sree" (raga Nata) by Veena Raja Rao, played on the veena by Veena Kinhal (2009),
      public domain: https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao (never take audio from YouTube).
-     It starts at data-play-from seconds (15, past the recording's opening) and, on reaching data-play-to (266.5, once
-     the last note has rung out, skipping the silent ending), goes back there. It is on by default (script below).
-     Until the file is found, the button stays hidden. For another recording, update src and both data-play-* values. -->
-<audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="15" data-play-to="266.5"></audio>
+     It starts at data-play-from seconds (35, past the recording's slow opening, where a phrase begins) and, on reaching
+     data-play-to (266.5, once the last note has rung out, skipping the silent ending), goes back there. It is on by
+     default (script below). Until the file is found, the button stays hidden. For another recording, update src and
+     both data-play-* values. -->
+<audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="35" data-play-to="266.5"></audio>
 
 <script>
 (function () {
