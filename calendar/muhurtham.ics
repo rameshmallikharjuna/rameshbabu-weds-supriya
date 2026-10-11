@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Srinidhi and Shilpa//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Srinidhi & Shilpa - Wedding
+BEGIN:VEVENT
+UID:muhurtham-20261116@srinidhi-weds-shilpa
+DTSTAMP:20261010T180908Z
+DTSTART:20261116T033000Z
+DTEND:20261116T043000Z
+SUMMARY:Muhurtham - Srinidhi & Shilpa's wedding
+LOCATION:Aarpee Ashraya Kalyana Mantapa\, Magadi Main Road\, Agrahara Dasar
+ ahalli\, Rajajinagar\, Bengaluru - 560079
+DESCRIPTION:Muhurtham for the wedding of Chi. Srinidhi and Chi. Sow. Shilpa
+ .\nMonday\, 16th November 2026\, 9:00 AM - 10:00 AM IST.\nVenue: Aarpee As
+ hraya Kalyana Mantapa\, Magadi Main Road\, Agrahara Dasarahalli\, Rajajina
+ gar\, Bengaluru - 560079.\nDirections: https://www.google.com/maps/search/
+ ?api=1&query=Aarpee+Ashraya+Kalyana+Mantapa+Bengaluru
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR

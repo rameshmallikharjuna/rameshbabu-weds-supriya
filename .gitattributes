@@ -1,0 +1,6 @@
+# Calendar files must keep their CRLF line endings (RFC 5545), so Git stores them byte for byte.
+*.ics -text
+*.png binary
+*.jpg binary
+*.pdf binary
+*.mp3 binary

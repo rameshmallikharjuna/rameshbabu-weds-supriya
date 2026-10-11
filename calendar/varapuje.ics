@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Srinidhi and Shilpa//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Srinidhi & Shilpa - Wedding
+BEGIN:VEVENT
+UID:varapuje-20261115@srinidhi-weds-shilpa
+DTSTAMP:20261010T180908Z
+DTSTART:20261115T050000Z
+SUMMARY:Varapuje - Srinidhi & Shilpa's wedding
+LOCATION:Aarpee Ashraya Kalyana Mantapa\, Magadi Main Road\, Agrahara Dasar
+ ahalli\, Rajajinagar\, Bengaluru - 560079
+DESCRIPTION:Varapuje for the wedding of Chi. Srinidhi and Chi. Sow. Shilpa.
+ \nSunday\, 15th November 2026\, 10:30 AM IST.\nVenue: Aarpee Ashraya Kalya
+ na Mantapa\, Magadi Main Road\, Agrahara Dasarahalli\, Rajajinagar\, Benga
+ luru - 560079.\nDirections: https://www.google.com/maps/search/?api=1&quer
+ y=Aarpee+Ashraya+Kalyana+Mantapa+Bengaluru
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
