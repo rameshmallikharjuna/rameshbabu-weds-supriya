@@ -34,15 +34,18 @@
     }, 2400);
   }
 
-  /* ---------- Music: audio/seetha-kalyana-vaibhogame.mp3 in the background (controls hide if it is missing) ---------- */
+  /* ---------- Music: audio/haratanaya-sree.mp3 in the background (controls hide if it is missing) ---------- */
   var audio = $('#bgm');
   var musicBtn = $('#music');
   var openMusicBtn = $('[data-open-music]');
   var musicCredit = $('#music-credit');
   var audioReady = false;
   var fadeTimer = 0;
-  // The song starts, and loops back, at data-play-from seconds, skipping the recording's intro.
+  // The song starts at data-play-from seconds, skipping the recording's quiet lead-in. On reaching
+  // data-play-to seconds (once the last note has rung out) or the end of the file, it goes back there.
   var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
+  var endAt = parseFloat(audio.getAttribute('data-play-to')) || 0;
+  var loopByHand = startAt > 0 || endAt > 0;
 
   function showMusic() {
     if (audioReady) return;
@@ -60,12 +63,13 @@
   function setPlaying(on) {
     musicBtn.classList.toggle('is-playing', on);
     musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    musicBtn.title = (on ? 'Pause' : 'Play') + ' music: Seetha Kalyana Vaibhogame';
+    musicBtn.title = (on ? 'Pause' : 'Play') + ' music: Haratanaya Sree';
   }
   function isPlaying() { return musicBtn.classList.contains('is-playing'); }
-  // data-play-from is ignored if the file is too short for it. Before the metadata loads (iOS), setting
-  // currentTime sets the position the browser starts from once it does.
+  // data-play-from is ignored if the file is too short for it, and data-play-to if the file ends before it.
+  // Before the metadata loads (iOS), setting currentTime sets the position the browser starts from once it does.
   function startPos() { return startAt > 0 && !(audio.duration <= startAt + 1) ? startAt : 0; }
+  function endPos() { return endAt > startPos() + 1 && !(audio.duration < endAt) ? endAt : 0; }
   function toStart() {
     if (audio.currentTime < startPos()) {
       try { audio.currentTime = startPos(); } catch (e) {}
@@ -107,14 +111,18 @@
   audio.addEventListener('error', hideMusic);
   audio.addEventListener('play', function () { setPlaying(true); });
   // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass.
-  audio.addEventListener('pause', function () { if (!(audio.ended && startAt > 0)) setPlaying(false); });
-  if (startAt > 0) {
-    audio.loop = false; // the native loop would restart at 0:00
+  audio.addEventListener('pause', function () { if (!(audio.ended && loopByHand)) setPlaying(false); });
+  if (loopByHand) {
+    audio.loop = false; // the native loop would restart at 0:00, after the silent ending
     audio.addEventListener('ended', function () {
       if (!isPlaying()) return;
       audio.currentTime = startPos();
       var p = audio.play();
       if (p && p.catch) p.catch(function () { setPlaying(false); });
+    });
+    // timeupdate fires about every 250 ms, so the jump lands within a quarter second of data-play-to.
+    audio.addEventListener('timeupdate', function () {
+      if (isPlaying() && endPos() && audio.currentTime >= endPos()) audio.currentTime = startPos();
     });
   }
   if (audio.readyState > 0) showMusic();

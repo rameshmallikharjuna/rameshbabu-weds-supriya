@@ -718,7 +718,7 @@
     <p class="footer-kn kn" lang="kn">ತಮ್ಮ ಆಗಮನಾಭಿಲಾಷಿಗಳು</p>
     <p class="footer-await">Eagerly awaiting your gracious presence</p>
     <p class="footer-from">With love &amp; regards, the families of <span class="nw">Srinidhi &amp; Shilpa</span></p>
-    <p class="footer-credit" id="music-credit" hidden>Music: <i>Seetha Kalyana Vaibhogame</i> (Instrumental) by Phani&nbsp;Narayana, from <i>Mood Music – Devotional Instrumentals of South India</i>, ℗&nbsp;2020 Strumm Entertainment Pvt.&nbsp;Ltd.</p>
+    <p class="footer-credit" id="music-credit" hidden>Music: <i>Haratanaya Sree</i> in raga Nata, composed by Veena&nbsp;Raja&nbsp;Rao and played on the veena by his daughter and disciple Veena&nbsp;Kinhal, from <i>Tribute to Veena Raja Rao</i> (2009). Public domain, via the <a href="https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao" target="_blank" rel="noopener">Internet&nbsp;Archive</a>.</p>
   </div>
 </footer>
 
@@ -730,7 +730,7 @@
     <a href="#venue"><span class="ico"><svg aria-hidden="true" focusable="false"><use href="#i-venue"/></svg></span><span class="dock-label">Venue</span></a>
     <a href="#share"><span class="ico"><svg aria-hidden="true" focusable="false"><use href="#i-share"/></svg></span><span class="dock-label">Share</span></a>
   </nav>
-  <button class="dock-music" id="music" type="button" aria-pressed="false" title="Play music: Seetha Kalyana Vaibhogame" hidden>
+  <button class="dock-music" id="music" type="button" aria-pressed="false" title="Play music: Haratanaya Sree" hidden>
     <span class="ico"><svg aria-hidden="true" focusable="false"><use href="#i-music"/></svg><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
     <span class="dock-label">Music</span>
   </button>
@@ -739,11 +739,12 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
-<!-- Background music: the instrumental "Seetha Kalyana Vaibhogame" by Phani Narayana (℗ 2020 Strumm Entertainment).
-     Add it as audio/seetha-kalyana-vaibhogame.mp3 only with the label's permission; never take audio from YouTube.
-     It starts, and loops back, at data-play-from seconds (0:32). Until the file exists, the music buttons and the
-     footer credit stay hidden. For another recording, update data-play-from and the footer credit. -->
-<audio id="bgm" src="audio/seetha-kalyana-vaibhogame.mp3" preload="metadata" loop data-play-from="32"></audio>
+<!-- Background music: "Haratanaya Sree" (raga Nata) by Veena Raja Rao, played on the veena by Veena Kinhal (2009),
+     public domain: https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao (never take audio from YouTube).
+     It starts at data-play-from seconds (4.6, after a near-silent lead-in) and, on reaching data-play-to (266.5, once
+     the last note has rung out, skipping the silent ending), goes back there. If the file is missing, the music buttons
+     and the footer credit stay hidden. For another recording, update src, both data-play-* values and the credit. -->
+<audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="4.6" data-play-to="266.5"></audio>
 
 </body>
 </html>

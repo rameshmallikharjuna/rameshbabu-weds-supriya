@@ -205,15 +205,15 @@ There are no frameworks and no build step. The only external resources are Googl
 - **When it plays**:
   - Never autoplay.
   - On the website, playback starts only from **Open with music** or the dock's music button. On the card, it starts from its round button.
-  - It fades in, starts at the `data-play-from` second set on the `<audio>` element (32, so 0:32, which skips the track's intro), loops back to that same point, and fades out on pause. (It is not `data-start`: the status chips select every `[data-start]` element.)
-- **The recording**: the family chose the instrumental *Seetha Kalyana Vaibhogame* by Phani Narayana, from the album *Mood Music – Devotional Instrumentals of South India* (℗ 2020 Strumm Entertainment Pvt. Ltd., distributed by The Orchard; on YouTube as video `OhDBfhbX5L4`, 6 min 51 s). It plays as background audio only; no video player is ever shown.
-  - It is a commercial recording. Add it as `audio/seetha-kalyana-vaibhogame.mp3` only once the family has the file with permission from Strumm Entertainment (or the artist) to use it on the site. Until then the site ships without music.
+  - It fades in, starts at the `data-play-from` second set on the `<audio>` element (4.6, which skips the recording's near-silent lead-in), goes back there on reaching `data-play-to` (266.5, once the last note has rung out, which skips the silent ending) or the end of the file, and fades out on pause. (It is not `data-start`: the status chips select every `[data-start]` element.)
+- **The recording**: *Haratanaya Sree*, a composition of Veena Raja Rao in raga Nata, played on the veena by his daughter and disciple Veena Kinhal, from *Tribute to Veena Raja Rao* (2009, 4 min 33 s). She released it into the public domain on the [Internet Archive](https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao) (it is also on Free Music Archive), so it is free to publish. `audio/haratanaya-sree.mp3` is the archive's original MP3 (MD5 `17d2ae3db528ee5489be5e212f7726f6`). It plays as background audio only; no video player is ever shown.
+  - The family first wanted *Seetha Kalyana Vaibhogame*, but every recording they found is copyrighted: Phani Narayana's instrumental (Strumm Entertainment; YouTube `OhDBfhbX5L4`, `D-4bPaUMaB4`, `z6-zn6WX2DY`), Karthick Iyer's violin (`bSv6F6a_214`), Veena Srivani (`48Wpqaqtch4`), Shreya Ramaswamy's veena (`XYPFVoIrecU`), and the *Nadamohanam* nadaswaram by Blue Planet Cinema (`I1mLL6AlQXA`). Wikimedia Commons, Free Music Archive and the Internet Archive have no free recording of it except a 1975 vocal concert, which sounded too old (checked October 2026).
+  - To switch to one of those, the family needs the audio file and permission from whoever owns the recording (the label, producer or artist). Then replace the file, set `src` and both `data-play-*` values on both pages (`data-play-from="0"` plays from the beginning; without `data-play-to` it plays to the end), and update both credits.
   - Never download, rip, bundle, or hide-play audio from YouTube, streaming services, or film soundtracks. YouTube allows playback only in a visible player, which the family does not want.
-  - The credit for the track sits in the website footer, and on the card it shows above the button for 6 s when the song starts.
-  - To use a different recording (the family's own, or one that is licensed or under Creative Commons), replace the file, set `data-play-from` on both pages (0 plays from the beginning), and update both credits.
+  - The credit for the track sits in the website footer, and on the card it shows above the button for 6 s when the song starts. Public-domain music needs no credit, but the site gives one anyway.
 - **If the file is missing**: every music control and the footer credit hide themselves, so no page ever shows a broken control.
   - Both pages detect the file with `loadedmetadata`/`error` events plus an HTTP `HEAD` check, because iOS doesn't preload audio.
-- **Controls**: they use `aria-pressed` and a "Play/Pause music: Seetha Kalyana Vaibhogame" label or title, and an equalizer animation runs while the song plays.
+- **Controls**: they use `aria-pressed` and a "Play/Pause music: Haratanaya Sree" label or title, and an equalizer animation runs while the song plays.
 
 ## 7. Calendar files (`calendar/`)
 
@@ -236,7 +236,7 @@ index.html  card.html  .nojekyll  .gitattributes
 assets/     app.css, app.js, favicon.svg
 calendar/   five .ics files
 exports/    srinidhi-weds-shilpa-invitation.png / .pdf / -preview.jpg
-audio/      seetha-kalyana-vaibhogame.mp3 (add it only once licensed; see section 6)
+audio/      haratanaya-sree.mp3 (public domain; see section 6)
 export.ps1, .github/   tooling (harmless if published)
 ```
 
@@ -246,7 +246,7 @@ export.ps1, .github/   tooling (harmless if published)
   - Preview JPG: 540 × 960, used by the website's Share section
 - **QR code**: an inline SVG that encodes the map link. If the link changes, regenerate it with Python `segno` using `segno.make(url, error="m").svg_inline(dark="#4A0A14", border=0, omitsize=True)`, then update both pages.
 - **Local preview**: run `python -m http.server 8000 --bind 127.0.0.1` in the project folder, then open <http://127.0.0.1:8000/> (website) or <http://127.0.0.1:8000/card.html> (card). Opening the files directly also works, but the music check and the share URL behave best over HTTP.
-  - Python's server ignores byte-range requests, so Chrome and Edge can't skip to 0:32 there and play the song from 0:00. GitHub Pages supports ranges, so the live site starts at 0:32 in every browser.
+  - Python's server ignores byte-range requests, so Chrome and Edge can't seek there: they play the song from 0:00 (with its 4.6 s near-silent lead-in) and don't skip the silent ending. GitHub Pages supports ranges, so the live site does both in every browser.
 - **GitHub Pages**:
   - Live site: <https://sriiiii007.github.io/srinidhi-weds-shilpa/>. Repository: <https://github.com/sriiiii007/srinidhi-weds-shilpa> (public).
   - Pages deploys the `main` branch from `/ (root)`, so a push to `main` goes live within a minute or two.
@@ -272,6 +272,6 @@ export.ps1, .github/   tooling (harmless if published)
   - [ ] Phones (360–412 px wide, plus landscape) show the doors turning in 3D, the garland and bells swaying, and no horizontal scrolling. Check with a WebKit (iPhone) and a Chromium (Android) engine.
   - [ ] Without the MP3, the only console errors are the expected 404s for it.
 - [ ] Card: nothing overflows or touches the frame, the thorana, or the bells. Animations stop with reduced motion and never appear in the PNG or PDF.
-- [ ] Music never autoplays, plays as background audio with no visible player, starts and loops back at `data-play-from` (0:32), and toggles play/pause with a fade. Its controls and credits are hidden when `audio/seetha-kalyana-vaibhogame.mp3` is missing. The recording is properly licensed and credited, and nothing is taken from YouTube or streaming services.
+- [ ] Music never autoplays, plays as background audio with no visible player, starts at `data-play-from` (4.6 s), goes back there from `data-play-to` (266.5 s), and toggles play/pause with a fade. Its controls and credits are hidden when `audio/haratanaya-sree.mp3` is missing. The recording is public domain or properly licensed, it is credited, and nothing is taken from YouTube or streaming services.
 - [ ] After every change to `card.html`, re-export and visually check the PNG, PDF, and preview JPG.
 - [ ] No invented facts and no visible placeholders.

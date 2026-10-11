@@ -179,7 +179,7 @@ body {
 .petals i:nth-child(4n+3) { --c: radial-gradient(circle at 35% 35%, #FFFFFF, #EADBB8 85%); }
 .petals i:nth-child(4n) { --c: radial-gradient(circle at 35% 35%, #FFE07A, #E8A317 75%); }
 
-/* Music: plays audio/seetha-kalyana-vaibhogame.mp3; the button stays hidden until the file is found. */
+/* Music: plays audio/haratanaya-sree.mp3; the button stays hidden until the file is found. */
 .music {
   position: fixed;
   right: max(14px, env(safe-area-inset-right));
@@ -859,17 +859,18 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   </article>
 </main>
 
-<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play music: Seetha Kalyana Vaibhogame" title="Play music: Seetha Kalyana Vaibhogame" hidden>
+<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play music: Haratanaya Sree" title="Play music: Haratanaya Sree" hidden>
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 18.5a3 3 0 1 1-2-2.83V5.2l11-2.2v12.5a3 3 0 1 1-2-2.83V7.06L9 8.46z"/></svg>
   <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-  <span class="music-label">Seetha Kalyana Vaibhogame</span>
+  <span class="music-label">Haratanaya Sree</span>
 </button>
-<p class="music-credit" id="music-credit"><i>Seetha Kalyana Vaibhogame</i> (Instrumental) · Phani&nbsp;Narayana · ℗&nbsp;2020 Strumm Entertainment</p>
-<!-- Background music: the instrumental "Seetha Kalyana Vaibhogame" by Phani Narayana (℗ 2020 Strumm Entertainment).
-     Add it as audio/seetha-kalyana-vaibhogame.mp3 only with the label's permission; never take audio from YouTube.
-     It starts, and loops back, at data-play-from seconds (0:32). Until the file exists, the button stays hidden.
-     For another recording, update data-play-from and the credit above. -->
-<audio id="bgm" src="audio/seetha-kalyana-vaibhogame.mp3" preload="metadata" loop data-play-from="32"></audio>
+<p class="music-credit" id="music-credit"><i>Haratanaya Sree</i> by Veena&nbsp;Raja&nbsp;Rao · veena: Veena&nbsp;Kinhal · public domain (<a href="https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao" target="_blank" rel="noopener">Internet&nbsp;Archive</a>)</p>
+<!-- Background music: "Haratanaya Sree" (raga Nata) by Veena Raja Rao, played on the veena by Veena Kinhal (2009),
+     public domain: https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao (never take audio from YouTube).
+     It starts at data-play-from seconds (4.6, after a near-silent lead-in) and, on reaching data-play-to (266.5, once
+     the last note has rung out, skipping the silent ending), goes back there. Until the file is found, the button
+     stays hidden. For another recording, update src, both data-play-* values and the credit above. -->
+<audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="4.6" data-play-to="266.5"></audio>
 
 <script>
 (function () {
@@ -878,9 +879,12 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   var credit = document.getElementById('music-credit');
   if (!btn || !audio || document.documentElement.classList.contains('export')) return;
 
-  var song = 'Seetha Kalyana Vaibhogame';
-  // The song starts, and loops back, at data-play-from seconds, skipping the recording's intro.
+  var song = 'Haratanaya Sree';
+  // The song starts at data-play-from seconds, skipping the recording's quiet lead-in. On reaching
+  // data-play-to seconds (once the last note has rung out) or the end of the file, it goes back there.
   var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
+  var endAt = parseFloat(audio.getAttribute('data-play-to')) || 0;
+  var loopByHand = startAt > 0 || endAt > 0;
   var on = false;
   var fadingOut = false;
   var timer;
@@ -915,9 +919,10 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
     }, 40);
   }
 
-  // data-play-from is ignored if the file is too short for it. Before the metadata loads (iOS), setting
-  // currentTime sets the position the browser starts from once it does.
+  // data-play-from is ignored if the file is too short for it, and data-play-to if the file ends before it.
+  // Before the metadata loads (iOS), setting currentTime sets the position the browser starts from once it does.
   function startPos() { return startAt > 0 && !(audio.duration <= startAt + 1) ? startAt : 0; }
+  function endPos() { return endAt > startPos() + 1 && !(audio.duration < endAt) ? endAt : 0; }
   function toStart() {
     if (audio.currentTime < startPos()) {
       try { audio.currentTime = startPos(); } catch (e) {}
@@ -946,14 +951,14 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
 
   // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass.
   audio.addEventListener('pause', function () {
-    if (on && !fadingOut && !(audio.ended && startAt > 0)) {
+    if (on && !fadingOut && !(audio.ended && loopByHand)) {
       on = false;
       render();
     }
   });
 
-  if (startAt > 0) {
-    audio.loop = false; // the native loop would restart at 0:00
+  if (loopByHand) {
+    audio.loop = false; // the native loop would restart at 0:00, after the silent ending
     audio.addEventListener('ended', function () {
       if (!on) return;
       audio.currentTime = startPos();
@@ -964,6 +969,10 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
           render();
         });
       }
+    });
+    // timeupdate fires about every 250 ms, so the jump lands within a quarter second of data-play-to.
+    audio.addEventListener('timeupdate', function () {
+      if (on && endPos() && audio.currentTime >= endPos()) audio.currentTime = startPos();
     });
   }
 
