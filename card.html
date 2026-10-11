@@ -11,7 +11,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Great+Vibes&amp;family=Tiro+Kannada&amp;display=swap">
-<script>if (/[?&]export(?:[=&]|$)/.test(location.search)) document.documentElement.classList.add('export');</script>
+<script>
+(function (html) {
+  if (/[?&]export(?:[=&]|$)/.test(location.search)) html.classList.add('export');
+})(document.documentElement);
+</script>
 <style>
 :root {
   --maroon: #6B0F1F;
@@ -211,28 +215,6 @@ body {
 .music.is-playing svg { display: none; }
 .music.is-playing .eq { display: inline-flex; }
 .music-label { white-space: nowrap; }
-/* Credit for the recording, shown above the button for a few seconds when the song starts */
-.music-credit {
-  position: fixed;
-  right: max(14px, env(safe-area-inset-right));
-  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 58px);
-  z-index: 10;
-  max-width: min(340px, calc(100vw - 28px));
-  margin: 0;
-  padding: 8px 12px;
-  border: 1px solid rgba(226, 186, 98, .55);
-  border-radius: 12px;
-  background: rgba(42, 5, 12, .94);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .45);
-  color: #F3E2BF;
-  font: 500 12px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  text-align: left;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .3s ease, visibility 0s linear .3s;
-}
-.music-credit.is-shown { opacity: 1; visibility: visible; transition: opacity .3s ease; }
-.music-credit a { color: inherit; text-underline-offset: 2px; }
 
 /* Link back to the invitation website (index.html) */
 .back {
@@ -269,51 +251,35 @@ body {
 .sway, .bell { transform-box: fill-box; transform-origin: 50% 0; }
 .flame { transform-box: fill-box; transform-origin: 50% 100%; }
 
-@media (prefers-reduced-motion: no-preference) {
-  .card { animation: card-in 1.2s cubic-bezier(.2, .7, .2, 1) both; }
-  .deco { animation: deco-in 1.4s .2s cubic-bezier(.2, .7, .2, 1) both; }
-  .content > * { animation: rise 1s cubic-bezier(.2, .7, .2, 1) both; }
-  .content > :nth-child(1) { animation-delay: .45s; }
-  .content > :nth-child(2) { animation-delay: .6s; }
-  .content > :nth-child(3) { animation-delay: .75s; }
-  .content > :nth-child(4) { animation-delay: .9s; }
-  .content > :nth-child(5) { animation-delay: 1.05s; }
-  .content > :nth-child(6) { animation-delay: 1.2s; }
-  .content > :nth-child(7) { animation-delay: 1.35s; }
-  .sway { animation: sway 3s ease-in-out var(--d, 0s) infinite alternate; }
-  .bell { animation: bell 3.4s ease-in-out infinite; }
-  .bell-r { animation-delay: -1.7s; }
-  .halo { animation: glow 3.2s ease-in-out infinite; }
-  .flame { animation: flicker 1.7s ease-in-out infinite; }
-  .mandala { animation: spin 160s linear infinite; }
-  .sparkle { animation: twinkle 2.8s ease-in-out infinite; }
-  .sparkle:nth-of-type(2) { animation-delay: -.7s; }
-  .sparkle:nth-of-type(3) { animation-delay: -1.4s; }
-  .sparkle:nth-of-type(4) { animation-delay: -2.1s; }
-  .petals i { animation: fall var(--t) linear var(--d) infinite; }
-  .music { animation: pop-in .6s 1.8s cubic-bezier(.2, .9, .3, 1.3) both; }
-  .music.is-playing::before { content: ""; position: absolute; inset: -6px; border: 2px solid rgba(240, 213, 140, .6); border-radius: inherit; animation: ring 1.8s ease-out infinite; }
-  .music.is-playing .eq i { animation: eq 1s ease-in-out infinite; }
-  .music .eq i:nth-child(2) { animation-delay: -.35s; }
-  .music .eq i:nth-child(3) { animation-delay: -.7s; }
-  .music .eq i:nth-child(4) { animation-delay: -.2s; }
-}
-/* Reduced motion (an accessibility setting, also switched on by some battery savers): calmer, not frozen.
-   The card fades in, and the garland, bells and sparkles move gently twice and then rest. */
-@media (prefers-reduced-motion: reduce) {
-  .card { animation: fade-in .8s ease both; }
-  .content > * { animation: fade-in .8s ease .3s both; }
-  .sway { animation: sway-calm 2.2s ease-in-out calc(var(--d, 0s) * -.12 + .5s) 2; }
-  .bell { animation: bell-calm 2.2s ease-in-out .7s 2; }
-  .bell-r { animation-delay: 1.1s; }
-  .sparkle { animation: glint 2s ease-in-out 1s 2; }
-  .sparkle:nth-of-type(even) { animation-delay: 1.5s; }
-}
+/* Every guest gets the full motion (phones that ask for reduced motion included). */
+.card { animation: card-in 1.2s cubic-bezier(.2, .7, .2, 1) both; }
+.deco { animation: deco-in 1.4s .2s cubic-bezier(.2, .7, .2, 1) both; }
+.content > * { animation: rise 1s cubic-bezier(.2, .7, .2, 1) both; }
+.content > :nth-child(1) { animation-delay: .45s; }
+.content > :nth-child(2) { animation-delay: .6s; }
+.content > :nth-child(3) { animation-delay: .75s; }
+.content > :nth-child(4) { animation-delay: .9s; }
+.content > :nth-child(5) { animation-delay: 1.05s; }
+.content > :nth-child(6) { animation-delay: 1.2s; }
+.content > :nth-child(7) { animation-delay: 1.35s; }
+.music { animation: pop-in .6s 1.8s cubic-bezier(.2, .9, .3, 1.3) both; }
+.music.is-playing::before { content: ""; position: absolute; inset: -6px; border: 2px solid rgba(240, 213, 140, .6); border-radius: inherit; animation: ring 1.8s ease-out infinite; }
+.music.is-playing .eq i { animation: eq 1s ease-in-out infinite; }
+.music .eq i:nth-child(2) { animation-delay: -.35s; }
+.music .eq i:nth-child(3) { animation-delay: -.7s; }
+.music .eq i:nth-child(4) { animation-delay: -.2s; }
+.sway { animation: sway 3s ease-in-out var(--d, 0s) infinite alternate; }
+.bell { animation: bell 3.4s ease-in-out infinite; }
+.bell-r { animation-delay: -1.7s; }
+.halo { animation: glow 3.2s ease-in-out infinite; }
+.flame { animation: flicker 1.7s ease-in-out infinite; }
+.mandala { animation: spin 160s linear infinite; }
+.sparkle { animation: twinkle 2.8s ease-in-out infinite; }
+.sparkle:nth-of-type(2) { animation-delay: -.7s; }
+.sparkle:nth-of-type(3) { animation-delay: -1.4s; }
+.sparkle:nth-of-type(4) { animation-delay: -2.1s; }
+.petals i { animation: fall var(--t) linear var(--d) infinite; }
 
-@keyframes fade-in { from { opacity: 0; } }
-@keyframes sway-calm { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(4deg); } 70% { transform: rotate(-4deg); } }
-@keyframes bell-calm { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(5deg); } 70% { transform: rotate(-5deg); } }
-@keyframes glint { 0%, 100% { opacity: .9; } 50% { opacity: .3; } }
 @keyframes card-in { from { opacity: 0; transform: translateY(2.5vmin) scale(.97); } }
 @keyframes deco-in { from { opacity: 0; transform: translateY(-3%); } }
 @keyframes rise { from { opacity: 0; transform: translateY(calc(14 * var(--u))); } }
@@ -347,7 +313,7 @@ html.export, html.export body { background: var(--maroon-deep); }
 html.export body { display: block; min-height: 0; padding: 0; overflow: hidden; }
 html.export .card { width: 540px; border-radius: 0; box-shadow: none; }
 html.export *, html.export *::before, html.export *::after { animation: none !important; transition: none !important; }
-html.export .petals, html.export .music, html.export .music-credit, html.export .back { display: none !important; }
+html.export .petals, html.export .music, html.export .back { display: none !important; }
 
 @page { size: 5.625in 10in; margin: 0; }
 @media print {
@@ -355,7 +321,7 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   body { display: block; min-height: 0; padding: 0; }
   .card { width: 5.625in; border-radius: 0; box-shadow: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .petals, .music, .music-credit, .back { display: none !important; }
+  .petals, .music, .back { display: none !important; }
   /* Real paper has its own texture; the simulated grain would only be rasterized into a heavy PDF. */
   .grain { display: none; }
 }
@@ -864,19 +830,17 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
   <span class="music-label">Haratanaya Sree</span>
 </button>
-<p class="music-credit" id="music-credit"><i>Haratanaya Sree</i> by Veena&nbsp;Raja&nbsp;Rao · veena: Veena&nbsp;Kinhal · public domain (<a href="https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao" target="_blank" rel="noopener">Internet&nbsp;Archive</a>)</p>
 <!-- Background music: "Haratanaya Sree" (raga Nata) by Veena Raja Rao, played on the veena by Veena Kinhal (2009),
      public domain: https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao (never take audio from YouTube).
      It starts at data-play-from seconds (15, past the recording's opening) and, on reaching data-play-to (266.5, once
-     the last note has rung out, skipping the silent ending), goes back there. Until the file is found, the button
-     stays hidden. For another recording, update src, both data-play-* values and the credit above. -->
+     the last note has rung out, skipping the silent ending), goes back there. It is on by default (script below).
+     Until the file is found, the button stays hidden. For another recording, update src and both data-play-* values. -->
 <audio id="bgm" src="audio/haratanaya-sree.mp3" preload="metadata" loop data-play-from="15" data-play-to="266.5"></audio>
 
 <script>
 (function () {
   var btn = document.getElementById('music');
   var audio = document.getElementById('bgm');
-  var credit = document.getElementById('music-credit');
   if (!btn || !audio || document.documentElement.classList.contains('export')) return;
 
   var song = 'Haratanaya Sree';
@@ -888,12 +852,18 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   var on = false;
   var fadingOut = false;
   var timer;
-  var creditTimer;
-
-  function showCredit(show) {
-    clearTimeout(creditTimer);
-    credit.classList.toggle('is-shown', show);
-    if (show) creditTimer = setTimeout(function () { credit.classList.remove('is-shown'); }, 6000);
+  // The music is on by default, unless the guest turned it off during this visit, here or on the invitation
+  // page (sessionStorage['sws-music-off']).
+  function readMusicOff() {
+    try { return sessionStorage.getItem('sws-music-off') === '1'; } catch (e) { return false; }
+  }
+  var musicOff = readMusicOff();
+  function setMusicOff(off) {
+    musicOff = off;
+    try {
+      if (off) sessionStorage.setItem('sws-music-off', '1');
+      else sessionStorage.removeItem('sws-music-off');
+    } catch (e) {}
   }
 
   function render() {
@@ -945,13 +915,15 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
   audio.addEventListener('error', function () {
     on = false;
     render();
-    showCredit(false);
+    stopWaiting();
     btn.hidden = true;
   });
 
-  // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass.
+  // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass. The event
+  // can arrive late (a page frozen by Back and then restored delivers it afterwards), so it only turns the
+  // button off when the audio is still paused.
   audio.addEventListener('pause', function () {
-    if (on && !fadingOut && !(audio.ended && loopByHand)) {
+    if (on && !fadingOut && audio.paused && !(audio.ended && loopByHand)) {
       on = false;
       render();
     }
@@ -976,31 +948,88 @@ html.export .petals, html.export .music, html.export .music-credit, html.export 
     });
   }
 
-  btn.addEventListener('click', function () {
-    on = !on;
+  function play() {
+    on = true;
     render();
-    showCredit(on);
-    if (on) {
-      fadingOut = false;
-      if (audio.paused) audio.volume = 0;
-      toStart();
-      var played = audio.play();
-      if (played && played.catch) {
-        played.catch(function () {
-          on = false;
-          render();
-          showCredit(false);
-        });
-      }
-      fadeTo(0.8, 1500);
-    } else {
-      fadingOut = true;
-      fadeTo(0, 500, function () {
-        audio.pause();
-        fadingOut = false;
+    fadingOut = false;
+    if (audio.paused) audio.volume = 0;
+    toStart();
+    var played = audio.play();
+    if (played && played.catch) {
+      played.catch(function () {
+        if (!audio.paused) return; // a later attempt is already playing
+        on = false;
+        render();
+        waitForTap();
       });
     }
+    fadeTo(0.8, 1500);
+  }
+  function pause() {
+    on = false;
+    render();
+    fadingOut = true;
+    fadeTo(0, 500, function () {
+      audio.pause();
+      fadingOut = false;
+    });
+  }
+
+  // Browsers only allow sound after a tap or key press. Until then, the guest's first one anywhere starts
+  // the music; a blocked attempt leaves the audio paused, so it keeps trying until one counts as a tap.
+  var tapEvents = ['pointerup', 'touchend', 'click', 'keydown'];
+  var waiting = false;
+  function onFirstTap(e) {
+    if (btn.contains(e.target)) return; // the button's own click handles it
+    if (musicOff || audio.error || !audio.paused) { stopWaiting(); return; }
+    play();
+    if (!audio.paused) stopWaiting();
+  }
+  function waitForTap() {
+    if (waiting || musicOff || audio.error) return;
+    waiting = true;
+    tapEvents.forEach(function (type) { document.addEventListener(type, onFirstTap, true); });
+  }
+  function stopWaiting() {
+    if (!waiting) return;
+    waiting = false;
+    tapEvents.forEach(function (type) { document.removeEventListener(type, onFirstTap, true); });
+  }
+
+  btn.addEventListener('click', function () {
+    stopWaiting();
+    setMusicOff(on);
+    if (on) pause(); else play();
   });
+
+  // The music rests while the guest is in another app or tab, or on the invitation page, and carries on
+  // when they come back. Back and Forward restore this page as it was, so the on/off choice is read
+  // again: the guest may have changed it on the invitation page.
+  var pausedByHide = false;
+  function onPageHide() {
+    if (on && !audio.paused) {
+      pausedByHide = true;
+      clearInterval(timer);
+      audio.pause();
+    }
+  }
+  function onPageShow() {
+    var resume = pausedByHide;
+    var wasOff = musicOff;
+    pausedByHide = false;
+    musicOff = readMusicOff();
+    if (musicOff) stopWaiting();
+    else if (resume || wasOff) play();
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) onPageHide(); else onPageShow();
+  });
+  window.addEventListener('pagehide', onPageHide);
+  window.addEventListener('pageshow', function (e) { if (e.persisted) onPageShow(); });
+
+  // On by default: this works right away after a tap on the invitation page in some browsers, and
+  // otherwise with the guest's first tap.
+  if (!musicOff) play();
 })();
 </script>
 </body>

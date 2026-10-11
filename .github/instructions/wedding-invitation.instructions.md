@@ -6,7 +6,7 @@ applyTo: ["index.html", "card.html", "assets/**", "calendar/**", "export.ps1", "
 
 The project is a small static website, ready for GitHub Pages. It has two pages:
 
-- **`index.html`** is the invitation as a modern, app-like website. It opens with temple doors and then shows a live countdown, a ceremony timeline with add-to-calendar, the venue with a map, share actions, bottom dock navigation, and optional music.
+- **`index.html`** is the invitation as a modern, app-like website. It opens with temple doors and then shows a live countdown, a ceremony timeline with add-to-calendar, the venue with a map, share actions, bottom dock navigation, and background music (on by default).
 - **`card.html`** is the classic 9:16 animated card. The PNG and PDF exports are made from it, and the website reuses its artwork.
 
 ## 1. Confirmed facts (single source of truth)
@@ -102,15 +102,16 @@ Leave these out or ask the user. Once the user confirms a new fact, add it to th
 - Every date, time, address, and parent's name must stay readable on a phone. On the card that means at least 2.6% of the card width; the decorative shloka can be smaller.
 - Use `--gold` text only when it is large or sits on maroon. Small text on ivory uses `--ink`, `--maroon-deep`, or `--gold-deep`.
 
-**Motion** (gentle and devotional, never flashy):
+**Motion** (gentle and devotional, never flashy, and alive on every screen):
 
 - Ambient loops on both pages:
   - mango leaves sway and temple bells swing
   - the Ganesha halo glows softly and the diya flame flickers
-  - the mandala turns very slowly and sparkles twinkle beside the names
+  - the mandala turns slowly and sparkles twinkle beside the names
   - a sparse shower of marigold, rose, jasmine, and turmeric petals falls (pushpa vrishti). The petals stay behind the text and never block clicks.
-- Animate only `transform` and `opacity`. Never move or fade text after its entrance.
-- Declare full motion inside `@media (prefers-reduced-motion: no-preference)`. Reduced motion (which some Android battery savers also switch on) gets a calmer version, not none: the garland and bells sway twice and come to rest, the sparkles glint twice, and content fades in. There are no petals, no spinning or sliding, and nothing loops forever.
+- On the website, every section keeps something moving (see section 4), so no screen looks static on a phone.
+- Animate only `transform` and `opacity`. Never move or fade text after its entrance; the one exception is each new countdown number dropping into its tile.
+- Every guest gets the full motion, including phones that ask for reduced motion. Many Android battery savers and "Remove animations" switches ask for it without the guest choosing, and the invitation then looked frozen. Don't add a pause-animations button; the family doesn't want one.
 
 ## 4. Website: `index.html`
 
@@ -127,7 +128,7 @@ There are no frameworks and no build step. The only external resources are Googl
 
 1. **Intro** (`#intro`, a modal dialog):
    - Two carved maroon temple doors under a thorana, with an arched plaque: Ganesha, invocation, ಶುಭ ವಿವಾಹ, names, and the date.
-   - The plaque has an **Open invitation** button, plus **Open with music** when the audio file exists. The doors swing open and the site rises in.
+   - The plaque has a single **Open invitation** button. That tap swings the doors open, starts the music (it is on by default), and the site rises in.
    - The doors play on every fresh visit and again on a reload. They are skipped when the guest comes back within the same tab (the back button, or returning from the card; `sessionStorage['sws-opened']`), for links with a `#section` hash, and when JavaScript is off.
 2. **Home** (`#home`):
    - Thorana and bells, a slowly turning mandala, Ganesha, the invocation, ಶುಭ ವಿವಾಹ, and the names (`h1#hero-title`).
@@ -167,14 +168,21 @@ There are no frameworks and no build step. The only external resources are Googl
 
 **Motion (website)**:
 
-- **Doors**: open in about 2.1 s.
+- **Doors**: swing open slowly, over about 4 s, and the site is ready after 4.3 s (`app.js` timers 900, 3600 and 4300 ms). The family asked for an unhurried opening; a much longer one would keep guests waiting.
   - Each door has its own `perspective()` inside its transform. WebKit (Safari and every iPhone browser) ignores a parent's perspective here and would squash the doors flat.
   - The depth is `--door-depth: clamp(480px, 125vw, 1800px)`, so the swing looks equally deep on phones and desktops.
 - **Hero**: items rise in sequence (`html.revealed` with `[data-rise]` and `--i`).
-- **Sections**: reveal on scroll (`[data-reveal]` with an optional `--delay`).
+- **Sections**: reveal on scroll (`[data-reveal]` with an optional `--delay`). In Celebrations, each day title, ceremony card, the Muhurtham plaque, and the "Add all" link reveal one by one.
 - **Scrolling**: dock and button links scroll smoothly (`html.smooth-scroll`, added on `load`). Deep links such as `…/#venue` jump straight to the section, so they don't animate past the hero or stop short when web fonts load.
-- **Ambient loops**: as listed in section 3.
-- **Reduced motion**: the doors turn slightly as they fade (about 1.25 s), the calm versions from section 3 play once the site is revealed, and all content is visible at once.
+- **Ambient loops**: as listed in section 3, plus one or more in every section:
+  - **Intro**: a soft ring pulses around **Open invitation**.
+  - **Home**: each new countdown number drops into its tile.
+  - **Section ornaments**: they breathe gently.
+  - **Couple**: the medallions turn, and a ring ripples out from the "&".
+  - **Celebrations**: a light travels down the timeline, and the timeline dots ripple. The Varapuje icon floats, the Sangeet drum beats, and the Reception diya flickers. The kalashas float and the Muhurtham plaque glows.
+  - **Venue**: the pin bounces.
+  - **Share**: the card preview floats.
+  - **Drifts**: `.drift` layers (filled by `app.js` from `data-count`) send petals down the ivory sections and diya sparks up the maroon ones and the footer, behind the content (`.section > .container` sits above them).
 
 **Shared artwork**:
 
@@ -203,15 +211,16 @@ There are no frameworks and no build step. The only external resources are Googl
 ## 6. Music (both pages)
 
 - **When it plays**:
-  - Never autoplay.
-  - On the website, playback starts only from **Open with music** or the dock's music button. On the card, it starts from its round button.
+  - It is on by default; the family asked for this. The guest turns it off with the dock's music button or the card's round button, and that choice lasts for the visit (`sessionStorage['sws-music-off']`, shared by both pages).
+  - Browsers allow sound only after a tap or key press, so on the website it starts with the **Open invitation** tap. When the doors are skipped, and on the card, it starts at once where the browser allows it (Chrome does after a tap on the previous page). Otherwise it starts with the guest's first tap or key press anywhere; a tap on the music button itself is left to the button.
+  - It rests while the page is hidden (another app or tab) and carries on when the guest comes back.
   - It fades in, starts at the `data-play-from` second set on the `<audio>` element (15, because the family asked to skip the recording's first 15 seconds), goes back there on reaching `data-play-to` (266.5, once the last note has rung out, which skips the silent ending) or the end of the file, and fades out on pause. (It is not `data-start`: the status chips select every `[data-start]` element.)
 - **The recording**: *Haratanaya Sree*, a composition of Veena Raja Rao in raga Nata, played on the veena by his daughter and disciple Veena Kinhal, from *Tribute to Veena Raja Rao* (2009, 4 min 33 s). She released it into the public domain on the [Internet Archive](https://archive.org/details/VeenaKinhalTributeToVeenaRajaRao) (it is also on Free Music Archive), so it is free to publish. `audio/haratanaya-sree.mp3` is the archive's original MP3 (MD5 `17d2ae3db528ee5489be5e212f7726f6`). It plays as background audio only; no video player is ever shown.
   - The family first wanted *Seetha Kalyana Vaibhogame*, but every recording they found is copyrighted: Phani Narayana's instrumental (Strumm Entertainment; YouTube `OhDBfhbX5L4`, `D-4bPaUMaB4`, `z6-zn6WX2DY`), Karthick Iyer's violin (`bSv6F6a_214`), Veena Srivani (`48Wpqaqtch4`), Shreya Ramaswamy's veena (`XYPFVoIrecU`), and the *Nadamohanam* nadaswaram by Blue Planet Cinema (`I1mLL6AlQXA`). Wikimedia Commons, Free Music Archive and the Internet Archive have no free recording of it except a 1975 vocal concert, which sounded too old (checked October 2026).
-  - To switch to one of those, the family needs the audio file and permission from whoever owns the recording (the label, producer or artist). Then replace the file, set `src` and both `data-play-*` values on both pages (`data-play-from="0"` plays from the beginning; without `data-play-to` it plays to the end), and update both credits.
+  - To switch to one of those, the family needs the audio file and permission from whoever owns the recording (the label, producer or artist). Then replace the file, set `src` and both `data-play-*` values on both pages (`data-play-from="0"` plays from the beginning; without `data-play-to` it plays to the end), and update the comments beside both `<audio>` elements.
   - Never download, rip, bundle, or hide-play audio from YouTube, streaming services, or film soundtracks. YouTube allows playback only in a visible player, which the family does not want.
-  - The credit for the track sits in the website footer, and on the card it shows above the button for 6 s when the song starts. Public-domain music needs no credit, but the site gives one anyway.
-- **If the file is missing**: every music control and the footer credit hide themselves, so no page ever shows a broken control.
+  - No credit is shown on either page; the family asked for it to be removed, and public-domain music needs none. The source is recorded here and in the comment beside each `<audio>` element.
+- **If the file is missing**: every music control hides itself, so no page ever shows a broken control.
   - Both pages detect the file with `loadedmetadata`/`error` events plus an HTTP `HEAD` check, because iOS doesn't preload audio.
 - **Controls**: they use `aria-pressed` and a "Play/Pause music: Haratanaya Sree" label or title, and an equalizer animation runs while the song plays.
 
@@ -268,10 +277,10 @@ export.ps1, .github/   tooling (harmless if published)
   - [ ] The countdown and chips are correct. Check them with a shifted clock on 15 Nov in the morning and afternoon, during the Muhurtham, and after it.
   - [ ] The calendar menus, the `.ics` downloads, Copy address, Copy link, Share, and WhatsApp all work.
   - [ ] Keyboard: Tab reaches **Open invitation**, Escape opens the invitation, and focus lands on the names.
-  - [ ] Reduced motion leaves no endless animation: only the calm, short versions from section 3 run.
+  - [ ] Every animation that runs on desktop also runs on phones, including phones set to reduce motion, and every section has visible motion.
   - [ ] Phones (360–412 px wide, plus landscape) show the doors turning in 3D, the garland and bells swaying, and no horizontal scrolling. Check with a WebKit (iPhone) and a Chromium (Android) engine.
   - [ ] Without the MP3, the only console errors are the expected 404s for it.
-- [ ] Card: nothing overflows or touches the frame, the thorana, or the bells. Animations stop with reduced motion and never appear in the PNG or PDF.
-- [ ] Music never autoplays, plays as background audio with no visible player, starts at `data-play-from` (15 s), goes back there from `data-play-to` (266.5 s), and toggles play/pause with a fade. Its controls and credits are hidden when `audio/haratanaya-sree.mp3` is missing. The recording is public domain or properly licensed, it is credited, and nothing is taken from YouTube or streaming services.
+- [ ] Card: nothing overflows or touches the frame, the thorana, or the bells. The animations never appear in the PNG or PDF.
+- [ ] Music is on by default: it starts with **Open invitation** (or the first tap when the doors are skipped, and on the card), plays as background audio with no visible player, starts at `data-play-from` (15 s), goes back there from `data-play-to` (266.5 s), toggles play/pause with a fade, and stays off for the visit once the guest turns it off. Its controls are hidden when `audio/haratanaya-sree.mp3` is missing. The recording is public domain or properly licensed, no credit text is shown, and nothing is taken from YouTube or streaming services.
 - [ ] After every change to `card.html`, re-export and visually check the PNG, PDF, and preview JPG.
 - [ ] No invented facts and no visible placeholders.

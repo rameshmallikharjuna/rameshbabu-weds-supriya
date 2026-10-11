@@ -14,7 +14,6 @@
   if (document.readyState === 'complete') enableSmoothScroll();
   else window.addEventListener('load', enableSmoothScroll);
 
-  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
@@ -34,11 +33,12 @@
     }, 2400);
   }
 
-  /* ---------- Music: audio/haratanaya-sree.mp3 in the background (controls hide if it is missing) ---------- */
+  /* ---------- Music: audio/haratanaya-sree.mp3 in the background (the button hides if it is missing) ---------- */
+  // The music is on by default. Browsers only allow sound after a tap or key press, so it starts with
+  // Open invitation, or with the guest's first tap when the doors are skipped. Turning it off with the
+  // dock button lasts for the visit (sessionStorage['sws-music-off'], shared with the card page).
   var audio = $('#bgm');
   var musicBtn = $('#music');
-  var openMusicBtn = $('[data-open-music]');
-  var musicCredit = $('#music-credit');
   var audioReady = false;
   var fadeTimer = 0;
   // The song starts at data-play-from seconds, skipping the recording's opening. On reaching
@@ -46,19 +46,27 @@
   var startAt = parseFloat(audio.getAttribute('data-play-from')) || 0;
   var endAt = parseFloat(audio.getAttribute('data-play-to')) || 0;
   var loopByHand = startAt > 0 || endAt > 0;
+  function readMusicOff() {
+    try { return sessionStorage.getItem('sws-music-off') === '1'; } catch (e) { return false; }
+  }
+  var musicOff = readMusicOff();
+  function setMusicOff(off) {
+    musicOff = off;
+    try {
+      if (off) sessionStorage.setItem('sws-music-off', '1');
+      else sessionStorage.removeItem('sws-music-off');
+    } catch (e) {}
+  }
 
   function showMusic() {
     if (audioReady) return;
     audioReady = true;
     musicBtn.hidden = false;
-    musicCredit.hidden = false;
-    if (!html.classList.contains('opened')) openMusicBtn.hidden = false;
   }
   function hideMusic() {
     audioReady = false;
     musicBtn.hidden = true;
-    musicCredit.hidden = true;
-    openMusicBtn.hidden = true;
+    stopWaitingForTap();
   }
   function setPlaying(on) {
     musicBtn.classList.toggle('is-playing', on);
@@ -97,11 +105,38 @@
     setPlaying(true);
     var p = audio.play();
     fadeTo(0.8, 1500);
-    if (p && p.catch) p.catch(function () { setPlaying(false); });
+    if (p && p.catch) {
+      p.catch(function () {
+        if (!audio.paused) return; // a later attempt is already playing
+        setPlaying(false);
+        waitForTap();
+      });
+    }
   }
   function pauseMusic() {
     setPlaying(false);
     fadeTo(0, 500, function () { audio.pause(); });
+  }
+
+  // Until the browser allows sound, the guest's first tap or key press anywhere starts the music. A blocked
+  // attempt leaves the audio paused, so it keeps trying until one of the events counts as a tap.
+  var TAP_EVENTS = ['pointerup', 'touchend', 'click', 'keydown'];
+  var waitingForTap = false;
+  function onFirstTap(e) {
+    if (musicBtn.contains(e.target)) return; // the button's own click handles it
+    if (musicOff || audio.error || !audio.paused) { stopWaitingForTap(); return; }
+    playMusic();
+    if (!audio.paused) stopWaitingForTap();
+  }
+  function waitForTap() {
+    if (waitingForTap || musicOff || audio.error) return;
+    waitingForTap = true;
+    TAP_EVENTS.forEach(function (type) { document.addEventListener(type, onFirstTap, true); });
+  }
+  function stopWaitingForTap() {
+    if (!waitingForTap) return;
+    waitingForTap = false;
+    TAP_EVENTS.forEach(function (type) { document.removeEventListener(type, onFirstTap, true); });
   }
 
   audio.addEventListener('loadedmetadata', function () {
@@ -109,9 +144,11 @@
     if (isPlaying()) toStart();
   });
   audio.addEventListener('error', hideMusic);
-  audio.addEventListener('play', function () { setPlaying(true); });
+  // These events can arrive late (a page frozen by Back and then restored delivers them afterwards), so they
+  // only update the button when the audio is still in that state.
+  audio.addEventListener('play', function () { if (!audio.paused) setPlaying(true); });
   // The end of the file also fires 'pause'; the button stays on because 'ended' starts the next pass.
-  audio.addEventListener('pause', function () { if (!(audio.ended && loopByHand)) setPlaying(false); });
+  audio.addEventListener('pause', function () { if (audio.paused && !(audio.ended && loopByHand)) setPlaying(false); });
   if (loopByHand) {
     audio.loop = false; // the native loop would restart at 0:00, after the silent ending
     audio.addEventListener('ended', function () {
@@ -133,8 +170,35 @@
       .catch(function () {});
   }
   musicBtn.addEventListener('click', function () {
-    if (musicBtn.classList.contains('is-playing')) pauseMusic(); else playMusic();
+    stopWaitingForTap();
+    var on = !musicBtn.classList.contains('is-playing');
+    setMusicOff(!on);
+    if (on) playMusic(); else pauseMusic();
   });
+  // The music rests while the guest is in another app or tab, or on the card page, and carries on when
+  // they come back. Back restores this page as it was, so the on/off choice is read again: the guest may
+  // have changed it on the card page.
+  var pausedByHide = false;
+  function onPageHide() {
+    if (isPlaying() && !audio.paused) {
+      pausedByHide = true;
+      clearInterval(fadeTimer);
+      audio.pause();
+    }
+  }
+  function onPageShow() {
+    var resume = pausedByHide;
+    var wasOff = musicOff;
+    pausedByHide = false;
+    musicOff = readMusicOff();
+    if (musicOff) stopWaitingForTap();
+    else if (resume || (wasOff && (opening || html.classList.contains('opened')))) playMusic();
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) onPageHide(); else onPageShow();
+  });
+  window.addEventListener('pagehide', onPageHide);
+  window.addEventListener('pageshow', function (e) { if (e.persisted) onPageShow(); });
 
   /* ---------- Intro doors ---------- */
   var intro = $('#intro');
@@ -142,13 +206,14 @@
   var heroTitle = $('#hero-title');
   var opening = false;
 
-  function openInvitation(withMusic) {
+  function openInvitation() {
     if (opening) return;
     opening = true;
-    if (withMusic) playMusic(); // must run inside the click for autoplay rules
+    if (!musicOff) playMusic(); // inside the tap, so the browser allows the sound
     try { sessionStorage.setItem('sws-opened', '1'); } catch (e) {}
     intro.classList.add('is-opening');
-    var t = reduceMotion ? [100, 800, 1250] : [300, 1500, 2100];
+    // The doors take about 4 s to swing open (assets/app.css); the site rises in behind them.
+    var t = [900, 3600, 4300];
     setTimeout(function () { html.classList.add('revealed'); }, t[0]);
     setTimeout(function () { intro.classList.add('is-closing'); }, t[1]);
     setTimeout(function () {
@@ -163,31 +228,44 @@
   if (html.classList.contains('opened')) {
     intro.hidden = true;
     html.classList.add('revealed');
+    // Coming back without the doors: some browsers allow the sound after a tap on the previous page;
+    // otherwise it starts with the guest's first tap.
+    if (!musicOff) playMusic();
   } else {
     app.inert = true;
     app.setAttribute('inert', '');
-    $('[data-open]', intro).addEventListener('click', function () { openInvitation(false); });
-    openMusicBtn.addEventListener('click', function () { openInvitation(true); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openInvitation(false); });
+    $('[data-open]', intro).addEventListener('click', openInvitation);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openInvitation(); });
   }
 
-  /* ---------- Falling petals ---------- */
-  if (!reduceMotion) {
-    var petals = $('.petals');
+  /* ---------- Falling petals (hero) and the drifts in the sections below ---------- */
+  // Negative delays start each one partway through its fall, so the motion is already under way.
+  function rand(min, max) { return min + Math.random() * (max - min); }
+  function scatter(box, count, style) {
     var frag = document.createDocumentFragment();
-    for (var k = 0; k < 16; k++) {
-      var p = document.createElement('i');
-      var dur = 11 + Math.random() * 8;
-      p.style.cssText =
-        '--x:' + (2 + Math.random() * 94).toFixed(1) + '%;' +
-        '--s:' + (8 + Math.random() * 7).toFixed(1) + ';' +
-        '--t:' + dur.toFixed(1) + 's;' +
-        '--d:' + (-Math.random() * dur).toFixed(1) + 's;' +
-        '--dx:' + ((Math.random() * 2 - 1) * 7).toFixed(1) + 'vw';
-      frag.appendChild(p);
+    for (var k = 0; k < count; k++) {
+      var el = document.createElement('i');
+      el.style.cssText = style();
+      frag.appendChild(el);
     }
-    petals.appendChild(frag);
+    box.appendChild(frag);
   }
+  scatter($('.petals'), 16, function () {
+    var dur = rand(11, 19);
+    return '--x:' + rand(2, 96).toFixed(1) + '%;--s:' + rand(8, 15).toFixed(1) + ';' +
+      '--t:' + dur.toFixed(1) + 's;--d:' + (-rand(0, dur)).toFixed(1) + 's;--dx:' + rand(-7, 7).toFixed(1) + 'vw';
+  });
+  // Petals drift down the ivory sections; diya sparks rise through the maroon ones.
+  $$('.drift').forEach(function (box) {
+    var sparks = box.classList.contains('drift-sparks');
+    scatter(box, parseInt(box.getAttribute('data-count'), 10) || 8, function () {
+      var dur = sparks ? rand(5, 9) : rand(9, 15);
+      return '--x:' + rand(2, 96).toFixed(1) + '%;' +
+        '--y:' + (sparks ? rand(25, 100) : rand(-6, 80)).toFixed(1) + '%;' +
+        '--s:' + (sparks ? rand(7, 13) : rand(8, 13)).toFixed(1) + ';' +
+        '--t:' + dur.toFixed(1) + 's;--d:' + (-rand(0, dur)).toFixed(1) + 's;--dx:' + rand(-6, 6).toFixed(1) + 'vw';
+    });
+  });
 
   /* ---------- Countdown to the Muhurtham (9:00 AM IST = 03:30 UTC) ---------- */
   var MUHURTHAM_START = Date.UTC(2026, 10, 16, 3, 30);
@@ -199,6 +277,18 @@
 
   function pad(n) { return n < 10 ? '0' + n : String(n); }
   function setText(el, text) { if (el.textContent !== text) el.textContent = text; }
+  // Each new number drops into its tile (not on the first fill).
+  var ticked = false;
+  function setUnit(el, text) {
+    if (el.textContent === text) return;
+    el.textContent = text;
+    if (ticked && el.animate) {
+      el.animate(
+        [{ transform: 'translateY(-35%)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+        { duration: 420, easing: 'cubic-bezier(.2, .7, .2, 1)' }
+      );
+    }
+  }
   function tick() {
     var now = Date.now();
     var diff = MUHURTHAM_START - now;
@@ -209,10 +299,11 @@
       return;
     }
     var s = Math.floor(diff / 1000);
-    setText(unitEls.d, String(Math.floor(s / 86400)));
-    setText(unitEls.h, pad(Math.floor((s % 86400) / 3600)));
-    setText(unitEls.m, pad(Math.floor((s % 3600) / 60)));
-    setText(unitEls.s, pad(s % 60));
+    setUnit(unitEls.d, String(Math.floor(s / 86400)));
+    setUnit(unitEls.h, pad(Math.floor((s % 86400) / 3600)));
+    setUnit(unitEls.m, pad(Math.floor((s % 3600) / 60)));
+    setUnit(unitEls.s, pad(s % 60));
+    ticked = true;
   }
   tick();
   setInterval(tick, 1000);
@@ -343,7 +434,7 @@
 
   /* ---------- Scroll reveals ---------- */
   var revealEls = $$('[data-reveal]');
-  if (!reduceMotion && 'IntersectionObserver' in window) {
+  if ('IntersectionObserver' in window) {
     var revealer = new IntersectionObserver(function (entries, observer) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
