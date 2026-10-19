@@ -1,4 +1,4 @@
-/* Srinidhi & Shilpa: wedding invitation app behaviour. No dependencies. */
+/* Rameshbabu & Supriya: wedding invitation app behaviour. No dependencies. */
 (function () {
   'use strict';
 
@@ -18,7 +18,7 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
   var pageUrl = new URL('./', location.href).href;
-  var shareText = "You're invited to the wedding of Srinidhi & Shilpa. Muhurtham: Monday, 16th November 2026, 9:00 AM \u2013 10:00 AM at Aarpee Ashraya Kalyana Mantapa, Bengaluru.";
+  var shareText = "You're invited to the wedding of Rameshbabu & Supriya. Muhurtham: Sunday, 01 November 2026, 8:00 AM \u2013 9:00 AM at Shri Veerashaiva Kalyana Mantapa, Challakere.";
 
   /* ---------- Toast ---------- */
   var toastEl = $('#toast');
@@ -33,7 +33,7 @@
     }, 2400);
   }
 
-  /* ---------- Music: audio/haratanaya-sree.mp3 in the background (the button hides if it is missing) ---------- */
+  /* ---------- Music: audio/vachindamma.mp3 in the background (the button hides if it is missing) ---------- */
   // The music is on by default. Browsers only allow sound after a tap or key press, so it starts with
   // Open invitation, or with the guest's first tap when the doors are skipped. Turning it off with the
   // dock button lasts for the visit (sessionStorage['sws-music-off'], shared with the card page).
@@ -71,7 +71,7 @@
   function setPlaying(on) {
     musicBtn.classList.toggle('is-playing', on);
     musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    musicBtn.title = (on ? 'Pause' : 'Play') + ' music: Haratanaya Sree';
+    musicBtn.title = (on ? 'Pause' : 'Play') + ' music: Vachindamma (Flute)';
   }
   function isPlaying() { return musicBtn.classList.contains('is-playing'); }
   // data-play-from is ignored if the file is too short for it, and data-play-to if the file ends before it.
@@ -267,9 +267,9 @@
     });
   });
 
-  /* ---------- Countdown to the Muhurtham (9:00 AM IST = 03:30 UTC) ---------- */
-  var MUHURTHAM_START = Date.UTC(2026, 10, 16, 3, 30);
-  var MUHURTHAM_END = Date.UTC(2026, 10, 16, 4, 30);
+  /* ---------- Countdown to the Muhurtham (8:00 AM IST = 02:30 UTC, 1 Nov 2026) ---------- */
+  var MUHURTHAM_START = Date.UTC(2026, 10, 1, 2, 30);
+  var MUHURTHAM_END = Date.UTC(2026, 10, 1, 3, 30);
   var countdown = $('#countdown');
   var doneEl = $('.countdown-done', countdown);
   var unitEls = {};

@@ -17,7 +17,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Name = 'srinidhi-weds-shilpa-invitation',
+    [string]$Name = 'rameshbabu-weds-supriya-invitation',
     [ValidateRange(1, 4)][int]$Scale = 2,
     [ValidateRange(10, 600)][int]$TimeoutSec = 30
 )

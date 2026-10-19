@@ -1,21 +1,20 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Srinidhi and Shilpa//Wedding Invitation//EN
+PRODID:-//Rameshbabu and Supriya//Wedding Invitation//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Srinidhi & Shilpa - Wedding
+X-WR-CALNAME:Rameshbabu & Supriya - Wedding
 BEGIN:VEVENT
-UID:sangeet-20261115@srinidhi-weds-shilpa
-DTSTAMP:20261010T180908Z
-DTSTART:20261115T070000Z
-SUMMARY:Sangeet - Srinidhi & Shilpa's wedding
-LOCATION:Aarpee Ashraya Kalyana Mantapa\, Magadi Main Road\, Agrahara Dasar
- ahalli\, Rajajinagar\, Bengaluru - 560079
-DESCRIPTION:Sangeet for the wedding of Chi. Srinidhi and Chi. Sow. Shilpa.\
- nSunday\, 15th November 2026\, 12:30 PM IST.\nVenue: Aarpee Ashraya Kalyan
- a Mantapa\, Magadi Main Road\, Agrahara Dasarahalli\, Rajajinagar\, Bengal
- uru - 560079.\nDirections: https://www.google.com/maps/search/?api=1&query
- =Aarpee+Ashraya+Kalyana+Mantapa+Bengaluru
+UID:sangeet-20261031@rameshbabu-weds-supriya
+DTSTAMP:20261019T100000Z
+DTSTART:20261031T070000Z
+DTEND:20261031T090000Z
+SUMMARY:Sangeet - Rameshbabu & Supriya's wedding
+LOCATION:Shri Veerashaiva Kalyana Mantapa\, Madakari Nagara\, Challakere\, Karnataka 577522
+DESCRIPTION:Sangeet celebration for the wedding of Chi. Rameshbabu and Chi. Sow. Supriya.
+Saturday\, 31st October 2026\, 12:30 PM IST onwards.
+Venue: Shri Veerashaiva Kalyana Mantapa\, Madakari Nagara\, Challakere\, Karnataka 577522.
+Directions: https://www.google.com/maps/search/?api=1&query=Shri+Veerashaiva+Kalyana+Mantapa+Madakari+Nagara+Challakere+Karnataka+577522
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 END:VEVENT

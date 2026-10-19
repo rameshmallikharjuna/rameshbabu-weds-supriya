@@ -11,8 +11,8 @@
       <stop offset="1" stop-color="#E0561B"/>
     </radialGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="#4A0A14"/>
-  <rect x="3" y="3" width="58" height="58" rx="11" fill="none" stroke="#C9973A" stroke-width="1.6"/>
+  <rect width="64" height="64" rx="14" fill="#0B2014"/>
+  <rect x="3" y="3" width="58" height="58" rx="11" fill="none" stroke="#D4AF37" stroke-width="1.6"/>
   <path d="M32 11C38.5 18.5 39.4 26.3 32 33.3C24.6 26.3 25.5 18.5 32 11Z" fill="url(#f)"/>
   <path d="M32 20.5C34.6 23.9 34.7 27.4 32 30.6C29.3 27.4 29.4 23.9 32 20.5Z" fill="#FFF6C2"/>
   <path d="M10 35.5H54C52.7 44.7 43.9 50.2 32 50.2C20.1 50.2 11.3 44.7 10 35.5Z" fill="url(#g)"/>

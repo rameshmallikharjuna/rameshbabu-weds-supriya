@@ -1,0 +1,28 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor & IDE Directories
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / NPM
+node_modules/
+package-lock.json
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Temporary build artifacts & logs
+*.log
+.system_generated/
+scratch/
+wedding-invite-edge-profile/
