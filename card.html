@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0B2014">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Noto+Serif+Devanagari:wght@400;600;700&amp;family=Parisienne&amp;family=Playfair+Display:ital,wght@1,600&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Noto+Serif+Devanagari:wght@400;600;700&amp;family=Parisienne&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap">
 <script>
 (function (html) {
   if (/[?&]export(?:[=&]|$)/.test(location.search)) html.classList.add('export');
@@ -33,6 +33,7 @@
   --f-names: "Allura", "Parisienne", "Playfair Display", cursive;
   --f-caps: "Cinzel", "Marcellus", Georgia, serif;
   --f-body: "Cormorant Garamond", Garamond, Georgia, serif;
+  --f-num: "Playfair Display", Georgia, serif;
   --f-kn: "Tiro Kannada", "Noto Serif Kannada", "Nirmala UI", Tunga, serif;
   --f-deva: "Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Noto Sans Devanagari", serif;
   /* One artboard unit. The card is designed at 540 x 960 units; cqw resolves against .card. */
@@ -138,11 +139,11 @@ body {
 .plaque-label { display: flex; align-items: center; justify-content: center; gap: calc(8 * var(--u)); font-family: var(--f-caps); font-weight: 700; font-size: calc(11.5 * var(--u)); letter-spacing: .2em; color: var(--gold-light); }
 .plaque-label .kn { font-size: calc(14 * var(--u)); letter-spacing: 0; }
 .plaque-label .dot { width: calc(4 * var(--u)); height: calc(4 * var(--u)); background: var(--gold-light); transform: rotate(45deg); }
-.plaque-date { font-weight: 600; font-size: calc(17.5 * var(--u)); line-height: 1.2; margin-top: calc(4 * var(--u)); }
-.plaque-time { font-family: var(--f-caps); font-weight: 700; font-size: calc(22 * var(--u)); line-height: 1.2; letter-spacing: .03em; color: var(--gold-light); margin-top: calc(1 * var(--u)); }
+.plaque-date { font-family: var(--f-num); font-weight: 700; font-size: calc(18 * var(--u)); line-height: 1.2; margin-top: calc(4 * var(--u)); }
+.plaque-time { font-family: var(--f-num); font-weight: 700; font-size: calc(23 * var(--u)); line-height: 1.2; letter-spacing: .02em; color: var(--gold-light); margin-top: calc(1 * var(--u)); }
 
 /* 5. Events on 15th */
-.events-date { display: flex; align-items: center; gap: calc(10 * var(--u)); font-family: var(--f-caps); font-weight: 700; font-size: calc(13 * var(--u)); line-height: 1.2; letter-spacing: .1em; color: var(--maroon); }
+.events-date { display: flex; align-items: center; gap: calc(10 * var(--u)); font-family: var(--f-num); font-weight: 700; font-size: calc(13.5 * var(--u)); line-height: 1.2; letter-spacing: .04em; color: var(--maroon); }
 .events-date::before, .events-date::after { content: ""; flex: 1; height: calc(1 * var(--u)); background: linear-gradient(90deg, transparent, var(--gold)); }
 .events-date::after { background: linear-gradient(270deg, transparent, var(--gold)); }
 .event-list { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); margin-top: calc(9 * var(--u)); }
@@ -150,8 +151,17 @@ body {
 .event + .event { border-left: calc(1 * var(--u)) solid rgba(201, 151, 58, .5); }
 .event-icon { width: calc(36 * var(--u)); height: calc(36 * var(--u)); overflow: visible; }
 .event-name { font-family: var(--f-caps); font-weight: 700; font-size: calc(14 * var(--u)); line-height: 1.2; letter-spacing: .06em; color: var(--maroon); margin-top: calc(4 * var(--u)); }
-.event-time { font-weight: 700; font-size: calc(16 * var(--u)); line-height: 1.2; color: var(--ink); margin-top: calc(1 * var(--u)); }
+.event-time { font-family: var(--f-num); font-weight: 700; font-size: calc(16 * var(--u)); line-height: 1.2; color: var(--ink); margin-top: calc(1 * var(--u)); }
 .event-loc { font-size: calc(10.5 * var(--u)); line-height: 1.2; font-weight: 600; color: var(--gold-deep); margin-top: calc(1.5 * var(--u)); text-align: center; }
+.event-list .event.event-reception {
+  border-radius: calc(8 * var(--u));
+  background: linear-gradient(180deg, rgba(20, 68, 42, .15), rgba(11, 32, 20, .06));
+  box-shadow: inset 0 0 0 calc(1 * var(--u)) rgba(212, 175, 55, .5), 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(11, 32, 20, .12);
+}
+.event-list .event.event-reception .event-time {
+  font-size: calc(17 * var(--u));
+  color: var(--maroon);
+}
 
 /* 6. Venue */
 .venue { display: flex; align-items: center; justify-content: center; gap: calc(16 * var(--u)); text-align: left; }
@@ -793,7 +803,7 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
             <span class="event-name">Sangeet</span>
             <span class="event-time">12:30 PM</span>
           </li>
-          <li class="event">
+          <li class="event event-reception">
             <svg class="event-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
               <g class="flame">
                 <path d="M20 7.5C24.2 12.7 24.8 18.1 20 22.9C15.2 18.1 15.8 12.7 20 7.5Z" fill="url(#g-flame)"/>

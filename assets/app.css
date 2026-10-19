@@ -17,6 +17,7 @@
   --f-script: "Allura", "Parisienne", "Playfair Display", cursive;
   --f-display: "Cinzel", "Marcellus", Georgia, serif;
   --f-serif: "Cormorant Garamond", Georgia, serif;
+  --f-num: "Playfair Display", Georgia, serif;
   --f-kn: "Tiro Kannada", "Noto Serif Kannada", "Nirmala UI", serif;
   --f-deva: "Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Noto Sans Devanagari", serif;
   --f-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -241,7 +242,7 @@ html:not(.js) .js-only { display: none !important; }
 .intro-names .amp { font: italic 500 .48em/1 var(--f-serif); color: var(--gold-light); margin: -.12em 0 -.04em; }
 .intro-date {
   margin-bottom: 20px;
-  font: 600 13px/1.5 var(--f-display); letter-spacing: .1em; color: var(--sandal);
+  font: 700 14px/1.5 var(--f-num); letter-spacing: .08em; color: var(--sandal);
 }
 @media (max-width: 520px) {
   .intro-sep { display: none; }
@@ -348,7 +349,7 @@ html:not(.js) .js-only { display: none !important; }
 .hero-names > .gold-text { display: inline-block; padding: .06em .22em .14em; }
 .hero-names .amp { font-size: .52em; padding: 0 .3em; margin: -.16em 0 -.1em; }
 .hero-names .sparkle { position: absolute; width: 16px; height: 16px; color: #F6DE9A; }
-.hero-date { font: 600 clamp(15px, 4vw, 20px)/1.4 var(--f-display); letter-spacing: .08em; color: var(--sandal); }
+.hero-date { font-family: var(--f-num); font-weight: 700; font-size: clamp(16px, 4vw, 22px); line-height: 1.4; letter-spacing: .06em; color: var(--sandal); }
 .hero-venue { margin-top: 2px; font-style: italic; font-size: clamp(16px, 4.3vw, 20px); color: rgba(243, 226, 191, .85); }
 
 @media (min-width: 900px) {
@@ -370,7 +371,7 @@ html:not(.js) .js-only { display: none !important; }
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
-.tile-num { display: block; font: 700 28px/1.1 var(--f-display); color: var(--gold-pale); font-variant-numeric: tabular-nums; }
+.tile-num { display: block; font-family: var(--f-num); font-weight: 700; font-size: 30px; line-height: 1.1; color: var(--gold-pale); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 .tile-label { display: block; margin-top: 4px; font: 600 10px/1 var(--f-ui); letter-spacing: .16em; text-transform: uppercase; color: rgba(243, 226, 191, .75); }
 .countdown-done { font: italic 600 clamp(20px, 5vw, 26px)/1.3 var(--f-serif); color: var(--gold-light); }
 .countdown.is-over .countdown-label, .countdown.is-over .countdown-tiles { display: none; }
@@ -483,7 +484,7 @@ html:not(.js) .js-only { display: none !important; }
 .day-title {
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
   margin-bottom: 18px;
-  font: 600 18px/1.3 var(--f-display); letter-spacing: .03em; color: var(--sandal);
+  font-family: var(--f-num); font-weight: 700; font-size: 20px; line-height: 1.3; letter-spacing: .02em; color: var(--sandal);
 }
 .day-badge {
   padding: 7px 11px; border-radius: 999px;
@@ -520,7 +521,7 @@ html:not(.js) .js-only { display: none !important; }
 .event-main { flex: 1; min-width: 0; }
 .event-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font: 600 21px/1.25 var(--f-display); color: var(--gold-pale); }
 .event-kn { font: 400 16px/1.4 var(--f-kn); color: var(--gold-light); }
-.event-time { display: flex; align-items: center; gap: 8px; margin: 6px 0 12px; font-weight: 600; font-size: 20px; color: var(--sandal); }
+.event-time { display: flex; align-items: center; gap: 8px; margin: 6px 0 12px; font-family: var(--f-num); font-weight: 700; font-size: 21px; color: var(--sandal); letter-spacing: .02em; }
 .event-time .i { width: 18px; height: 18px; color: var(--gold); }
 .event-loc { display: flex; align-items: center; gap: 8px; margin: -4px 0 12px; font-weight: 500; font-size: 16px; color: var(--gold-light); }
 .event-loc .i { width: 17px; height: 17px; color: var(--gold); flex: none; }
@@ -528,6 +529,44 @@ html:not(.js) .js-only { display: none !important; }
 /* From 480px even the longest chip shares a line with Add to calendar; the button keeps to the right, under its menu, also with no chip */
 @media (min-width: 480px) {
   .event .cal { margin-left: auto; }
+}
+
+/* Featured / Highlighted Reception Card matching Day 2 Muhurtham card */
+.event.event-reception {
+  position: relative;
+  padding: 22px 20px 20px;
+  border: 1px solid rgba(212, 175, 55, .75);
+  border-radius: 26px;
+  background:
+    radial-gradient(110% 80% at 50% 0%, rgba(243, 229, 171, .25), rgba(243, 229, 171, .05) 60%, transparent),
+    linear-gradient(180deg, #133824, #0B2014);
+  box-shadow:
+    inset 0 0 0 5px rgba(11, 32, 20, .65),
+    inset 0 0 0 6px rgba(212, 175, 55, .35),
+    0 26px 54px -22px rgba(0, 0, 0, .85);
+}
+.event.event-reception::before {
+  top: 38px;
+  background: var(--gold-light);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, .4);
+}
+.event.event-reception .event-name {
+  font-size: 24px;
+  color: var(--gold-pale);
+}
+.event.event-reception .event-time {
+  font-family: var(--f-num);
+  font-weight: 700;
+  font-size: clamp(24px, 5.2vw, 32px);
+  color: var(--gold-light);
+  margin: 8px 0 16px;
+  letter-spacing: .02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .5);
+}
+.event.event-reception .event-time .i {
+  width: 22px;
+  height: 22px;
+  color: var(--gold);
 }
 
 .chip {
@@ -574,8 +613,8 @@ html:not(.js) .js-only { display: none !important; }
 .muhurtham .kalasha { flex: none; width: 46px; height: 62px; overflow: visible; }
 .muhurtham-label { display: flex; flex-direction: column; gap: 2px; font: 700 12px/1.3 var(--f-ui); letter-spacing: .24em; text-transform: uppercase; color: var(--gold-light); }
 .muhurtham-label .kn { font: 400 19px/1.4 var(--f-kn); letter-spacing: 0; text-transform: none; }
-.muhurtham-time { padding: 0 .1em .05em; font: 700 clamp(22px, 6.2vw, 38px)/1.2 var(--f-display); letter-spacing: .02em; }
-.muhurtham-date { margin: 6px 0 18px; font-size: 19px; color: var(--sandal); }
+.muhurtham-time { padding: 0 .1em .05em; font-family: var(--f-num); font-weight: 700; font-size: clamp(24px, 6.2vw, 40px); line-height: 1.2; letter-spacing: .02em; }
+.muhurtham-date { margin: 6px 0 18px; font-family: var(--f-num); font-weight: 700; font-size: 20px; color: var(--sandal); letter-spacing: .02em; }
 .muhurtham .event-foot { justify-content: center; }
 @media (min-width: 600px) {
   .muhurtham { padding: 30px 28px 26px; }
@@ -793,12 +832,13 @@ html:not(.js) .js-only { display: none !important; }
 .person:nth-child(3) .person-medal svg { animation-direction: reverse; }
 .couple-amp::before { animation: halo-ring 2.8s ease-out infinite; }
 .timeline::after { animation: travel 4.5s ease-in-out infinite; }
-.event::after { animation: ripple 2.8s ease-out infinite; }
-.event:nth-child(2)::after { animation-delay: .93s; }
-.event:nth-child(3)::after { animation-delay: 1.86s; }
+.event:not(.event-reception)::after { animation: ripple 2.8s ease-out infinite; }
+.event:nth-child(2):not(.event-reception)::after { animation-delay: .93s; }
+.event:nth-child(3):not(.event-reception)::after { animation-delay: 1.86s; }
 .event:nth-child(1) .event-medal svg { animation: float 3.2s ease-in-out infinite; }
 .event:nth-child(2) .event-medal svg { animation: beat 1.8s ease-in-out infinite; }
-.muhurtham::after { animation: glow 3.2s ease-in-out infinite; }
+.muhurtham::after,
+.event.event-reception::after { animation: glow 3.2s ease-in-out infinite; }
 .muhurtham .kalasha { --lift: -5px; animation: float 3.6s ease-in-out infinite; }
 .muhurtham .kalasha:last-child { animation-delay: -1.8s; }
 .venue-pin { animation: pin-bounce 2.8s ease-in-out infinite; }
@@ -817,12 +857,13 @@ html:not(.js) .js-only { display: none !important; }
   background: radial-gradient(closest-side, #FFF3C4, rgba(240, 200, 110, .8) 45%, rgba(240, 200, 110, 0)) top / 8px 56px no-repeat;
   opacity: 0; pointer-events: none;
 }
-.event::after {
+.event:not(.event-reception)::after {
   content: ""; position: absolute; left: -24px; top: 34px;
   width: 12px; height: 12px; border-radius: 50%;
   border: 1.5px solid var(--gold-light); opacity: 0; pointer-events: none;
 }
-.muhurtham::after {
+.muhurtham::after,
+.event.event-reception::after {
   content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
   box-shadow: 0 0 0 1px rgba(212, 175, 55, .9), 0 0 30px 2px rgba(212, 175, 55, .4);
   opacity: 0;
