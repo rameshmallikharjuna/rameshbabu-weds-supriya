@@ -26,3 +26,10 @@ env/
 .system_generated/
 scratch/
 wedding-invite-edge-profile/
+
+# Private Contacts & WhatsApp Dispatcher (Never push to GitHub)
+contacts*.csv
+*.csv
+generate_whatsapp_invites.py
+whatsapp-invites.html
+whatsapp_invites_*.csv
