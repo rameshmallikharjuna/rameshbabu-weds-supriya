@@ -18,7 +18,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Noto+Serif+Devanagari:wght@400;600;700&amp;family=Parisienne&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Noto+Serif+Devanagari:wght@400;600;700&amp;family=Noto+Serif+Kannada:wght@600;700&amp;family=Parisienne&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Sree+Krushnadevaraya&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap">
 <link rel="stylesheet" href="assets/app.css">
 <script>
 (function (html) {
@@ -322,8 +322,22 @@
   </svg>
   <div class="intro-card">
     <svg class="intro-ganesha gold-ganesha" viewBox="0 0 120 120" role="img" aria-label="Lord Ganesha"><use href="#ganesha"/></svg>
-    <p class="intro-invoke">॥ श्री गणेशाय नमः ॥</p>
-    <p class="intro-kicker"><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg><span>शुभ विवाह</span><svg class="flip" aria-hidden="true" focusable="false"><use href="#flourish"/></svg></p>
+    <p class="intro-invoke">
+      <span class="script-cycle" data-script-cycle>
+        <span class="script-item is-active" data-lang="te" lang="te">॥ శ్రీ గణేశాయ నమః ॥</span>
+        <span class="script-item" data-lang="kn" lang="kn">॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ ॥</span>
+        <span class="script-item" data-lang="sa" lang="sa">॥ श्री गणेशाय नमः ॥</span>
+      </span>
+    </p>
+    <p class="intro-kicker">
+      <svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg>
+      <span class="script-cycle" data-script-cycle>
+        <span class="script-item is-active" data-lang="te" lang="te">శుభ వివాహం</span>
+        <span class="script-item" data-lang="kn" lang="kn">ಶುಭ ವಿವಾಹ</span>
+        <span class="script-item" data-lang="sa" lang="sa">शुभ विवाह</span>
+      </span>
+      <svg class="flip" aria-hidden="true" focusable="false"><use href="#flourish"/></svg>
+    </p>
     <h2 class="intro-names" id="intro-title"><span class="gold-text">Rameshbabu</span> <span class="amp">&amp;</span> <span class="gold-text">Supriya</span></h2>
     <p class="intro-date" id="intro-date"><span class="nw">Sunday, 01 November 2026</span> <span class="intro-sep" aria-hidden="true">·</span> <span class="intro-city">Challakere</span></p>
     <div class="intro-actions">
@@ -446,8 +460,22 @@
 
     <div class="hero-inner">
       <svg class="hero-ganesha gold-ganesha" data-rise style="--i:0" viewBox="0 0 120 120" role="img" aria-label="Lord Ganesha"><use href="#ganesha"/></svg>
-      <p class="hero-invoke" data-rise style="--i:1">॥ श्री गणेशाय नमः ॥</p>
-      <p class="hero-title" data-rise style="--i:2"><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg><span>शुभ विवाह</span><svg class="flip" aria-hidden="true" focusable="false"><use href="#flourish"/></svg></p>
+      <p class="hero-invoke" data-rise style="--i:1">
+        <span class="script-cycle" data-script-cycle>
+          <span class="script-item is-active" data-lang="te" lang="te">॥ శ్రీ గణేశాయ నమః ॥</span>
+          <span class="script-item" data-lang="kn" lang="kn">॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ ॥</span>
+          <span class="script-item" data-lang="sa" lang="sa">॥ श्री गणेशाय नमः ॥</span>
+        </span>
+      </p>
+      <p class="hero-title" data-rise style="--i:2">
+        <svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg>
+        <span class="script-cycle" data-script-cycle>
+          <span class="script-item is-active" data-lang="te" lang="te">శుభ వివాహం</span>
+          <span class="script-item" data-lang="kn" lang="kn">ಶುಭ ವಿವಾಹ</span>
+          <span class="script-item" data-lang="sa" lang="sa">शुभ विवाह</span>
+        </span>
+        <svg class="flip" aria-hidden="true" focusable="false"><use href="#flourish"/></svg>
+      </p>
       <h1 class="hero-names" id="hero-title" tabindex="-1" data-rise style="--i:3">
         <span class="gold-text">Rameshbabu</span>
         <span class="amp gold-text">&amp;</span>
@@ -488,7 +516,13 @@
         <svg class="orn" aria-hidden="true" focusable="false"><use href="#orn"/></svg>
         <h2 class="section-title" id="couple-title">The Couple</h2>
       </header>
-      <p class="shloka" data-reveal>वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
+      <div class="shloka" data-reveal>
+        <span class="script-cycle is-block" data-script-cycle>
+          <span class="script-item is-active" data-lang="te" lang="te">వక్రతుండ మహాకాయ సూర్యకోటి సమప్రభ ।<br>నిర్విఘ్నం కురు మే దేవ సర్వకార్యేషు సర్వదా ॥</span>
+          <span class="script-item" data-lang="kn" lang="kn">ವಕ್ರತುಂಡ ಮಹಾಕಾಯ ಸೂರ್ಯಕೋಟಿ ಸಮಪ್ರಭ ।<br>ನಿರ್ವಿಘ್ನಂ ಕುರು ಮೇ ದೇವ ಸರ್ವಕಾರ್ಯೇಷು ಸರ್ವದಾ ॥</span>
+          <span class="script-item" data-lang="sa" lang="sa">वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</span>
+        </span>
+      </div>
       <p class="lead" data-reveal>With the blessings of the Almighty and our elders, we joyfully invite you and your family to the auspicious wedding of</p>
 
       <div class="couple-grid">

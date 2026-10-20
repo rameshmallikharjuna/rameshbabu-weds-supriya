@@ -469,4 +469,78 @@
   } else {
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
   }
+
+  /* ---------- Multilingual Script Transition (Telugu -> Kannada -> Sanskrit) ---------- */
+  (function initScriptCycler() {
+    var cycles = $$('[data-script-cycle]');
+    if (!cycles.length) return;
+
+    var currentIndex = 0;
+    var total = 3; // 0: Telugu, 1: Kannada, 2: Sanskrit
+    var cycleTimer = null;
+    var holdDuration = 4200; // 4.2 seconds hold per script
+    var transitionDuration = 950; // 0.95 seconds silk crossfade
+
+    function transitionStep() {
+      var prevIndex = currentIndex;
+      currentIndex = (currentIndex + 1) % total;
+
+      cycles.forEach(function (cycle) {
+        var items = $$('.script-item', cycle);
+        if (items.length < total) return;
+
+        var prevItem = items[prevIndex];
+        var nextItem = items[currentIndex];
+
+        if (prevItem) {
+          prevItem.classList.remove('is-active');
+          prevItem.classList.add('is-leaving');
+          setTimeout(function () {
+            prevItem.classList.remove('is-leaving');
+          }, transitionDuration);
+        }
+
+        if (nextItem) {
+          nextItem.classList.remove('is-leaving');
+          nextItem.classList.add('is-active');
+        }
+      });
+    }
+
+    function startCycle() {
+      stopCycle();
+      cycleTimer = setInterval(transitionStep, holdDuration);
+    }
+
+    function stopCycle() {
+      if (cycleTimer) {
+        clearInterval(cycleTimer);
+        cycleTimer = null;
+      }
+    }
+
+    window.scriptCycler = {
+      start: startCycle,
+      stop: stopCycle,
+      setIndex: function (idx) {
+        stopCycle();
+        currentIndex = idx;
+        cycles.forEach(function (cycle) {
+          var items = $$('.script-item', cycle);
+          items.forEach(function (item, i) {
+            item.classList.remove('is-leaving');
+            if (i === idx) item.classList.add('is-active');
+            else item.classList.remove('is-active');
+          });
+        });
+      }
+    };
+
+    startCycle();
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stopCycle();
+      else startCycle();
+    });
+  })();
 })();

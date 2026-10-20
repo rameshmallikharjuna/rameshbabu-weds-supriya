@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0B2014">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Noto+Serif+Devanagari:wght@400;600;700&amp;family=Parisienne&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Noto+Serif+Devanagari:wght@400;600;700&amp;family=Noto+Serif+Kannada:wght@600;700&amp;family=Parisienne&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Sree+Krushnadevaraya&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap">
 <script>
 (function (html) {
   if (/[?&]export(?:[=&]|$)/.test(location.search)) html.classList.add('export');
@@ -34,8 +34,10 @@
   --f-caps: "Cinzel", "Marcellus", Georgia, serif;
   --f-body: "Cormorant Garamond", Garamond, Georgia, serif;
   --f-num: "Playfair Display", Georgia, serif;
-  --f-kn: "Tiro Kannada", "Noto Serif Kannada", "Nirmala UI", Tunga, serif;
+  --f-kn: "Noto Serif Kannada", "Tiro Kannada", serif;
+  --f-te: "Sree Krushnadevaraya", "Suranna", serif;
   --f-deva: "Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Noto Sans Devanagari", serif;
+  --f-sa: "Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Noto Sans Devanagari", serif;
   /* One artboard unit. The card is designed at 540 x 960 units; cqw resolves against .card. */
   --u: calc(100cqw / 540);
 }
@@ -96,13 +98,82 @@ body {
 
 /* 1. Invocation */
 .ganesha { display: block; width: calc(94 * var(--u)); height: calc(94 * var(--u)); margin: 0 auto; overflow: visible; }
-.invoke { font-family: var(--f-deva); font-size: calc(18 * var(--u)); line-height: 1.3; color: var(--maroon); margin-top: calc(2 * var(--u)); letter-spacing: .04em; }
-.shloka { font-family: var(--f-deva); font-size: calc(12.5 * var(--u)); line-height: 1.6; color: var(--maroon-deep); opacity: .9; margin-top: calc(3 * var(--u)); letter-spacing: .02em; font-style: normal; }
+.invoke { font-size: calc(18 * var(--u)); line-height: 1.3; color: var(--maroon); margin-top: calc(2 * var(--u)); letter-spacing: .04em; }
+.shloka { font-size: calc(12.5 * var(--u)); line-height: 1.6; color: var(--maroon-deep); opacity: .9; margin-top: calc(3 * var(--u)); letter-spacing: .02em; font-style: normal; }
 
 /* 2. Title and lead */
-.title { display: flex; align-items: center; justify-content: center; gap: calc(10 * var(--u)); font-family: var(--f-deva); font-size: calc(24 * var(--u)); font-weight: 600; line-height: 1.3; color: var(--maroon); letter-spacing: .06em; }
+.title { display: flex; align-items: center; justify-content: center; gap: calc(10 * var(--u)); font-size: calc(24 * var(--u)); font-weight: 600; line-height: 1.3; color: var(--maroon); letter-spacing: .06em; }
 .title svg { flex: none; width: calc(84 * var(--u)); height: calc(14 * var(--u)); }
 .title svg:last-child { transform: scaleX(-1); }
+
+/* Multilingual Script Transition (Zero Layout Shift via CSS Grid) */
+.script-cycle {
+  display: inline-grid;
+  grid-template-areas: "cycle-stack";
+  align-items: center;
+  justify-items: center;
+  position: relative;
+  vertical-align: middle;
+}
+.script-cycle.is-block {
+  display: grid;
+  width: 100%;
+}
+.script-item {
+  grid-area: cycle-stack;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(3 * var(--u)));
+  filter: blur(calc(1.5 * var(--u)));
+  transition:
+    opacity .95s cubic-bezier(.25, 1, .5, 1),
+    transform .95s cubic-bezier(.25, 1, .5, 1),
+    filter .95s cubic-bezier(.25, 1, .5, 1),
+    visibility .95s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.shloka .script-item {
+  white-space: normal;
+  text-align: center;
+  width: 100%;
+}
+.script-item.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  filter: blur(0);
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+}
+.script-item.is-leaving {
+  opacity: 0;
+  visibility: visible;
+  transform: translateY(calc(-3 * var(--u)));
+  filter: blur(calc(1.5 * var(--u)));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.script-item[lang="te"] { font-family: var(--f-te); letter-spacing: .02em; }
+.script-item[lang="kn"] { font-family: var(--f-kn); font-weight: 700; letter-spacing: .02em; }
+.script-item[lang="sa"] { font-family: var(--f-sa); letter-spacing: .03em; }
+
+.invoke .script-item[lang="te"] { font-size: 1.05em; }
+.title .script-item[lang="te"] { font-size: 1.06em; }
+.shloka .script-item[lang="te"] { font-size: 1.02em; }
+
+.invoke .script-item[lang="kn"] { font-size: 1.02em; }
+.title .script-item[lang="kn"] { font-size: 1.02em; }
+
+html.export .script-item:not(.is-active),
+html:not(.js) .script-item:not(:first-child) { display: none !important; }
+html.export .script-item.is-active,
+html:not(.js) .script-item:first-child {
+  opacity: 1 !important; visibility: visible !important;
+  transform: none !important; filter: none !important;
+}
 .lead { font-style: italic; font-weight: 500; font-size: calc(15.5 * var(--u)); line-height: 1.38; max-width: calc(430 * var(--u)); margin: calc(3 * var(--u)) auto 0; text-wrap: balance; }
 
 /* 3. Couple */
@@ -663,12 +734,32 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
           <circle cx="60" cy="11" r="2.4" fill="#C9973A"/>
           <circle cx="60" cy="32" r="2" fill="#9B1B30"/>
         </svg>
-        <p class="invoke">॥ श्री गणेशाय नमः ॥</p>
-        <p class="shloka">वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
+        <p class="invoke">
+          <span class="script-cycle" data-script-cycle>
+            <span class="script-item is-active" data-lang="te" lang="te">॥ శ్రీ గణేశాయ నమః ॥</span>
+            <span class="script-item" data-lang="kn" lang="kn">॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ ॥</span>
+            <span class="script-item" data-lang="sa" lang="sa">॥ श्री गणेशाय नमः ॥</span>
+          </span>
+        </p>
+        <div class="shloka">
+          <span class="script-cycle is-block" data-script-cycle>
+            <span class="script-item is-active" data-lang="te" lang="te">వక్రతుండ మహాకాయ సూర్యకోటి సమప్రభ ।<br>నిర్విఘ్నం కురు మే దేవ సర్వకార్యేషు సర్వదా ॥</span>
+            <span class="script-item" data-lang="kn" lang="kn">ವಕ್ರತುಂಡ ಮಹಾಕಾಯ ಸೂರ್ಯಕೋಟಿ ಸಮಪ್ರಭ ।<br>ನಿರ್ವಿಘ್ನಂ ಕುರು ಮೇ ದೇವ ಸರ್ವಕಾರ್ಯೇಷು ಸರ್ವದಾ ॥</span>
+            <span class="script-item" data-lang="sa" lang="sa">वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</span>
+          </span>
+        </div>
       </header>
 
       <section class="intro">
-        <p class="title"><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg><span>शुभ विवाह</span><svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg></p>
+        <p class="title">
+          <svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg>
+          <span class="script-cycle" data-script-cycle>
+            <span class="script-item is-active" data-lang="te" lang="te">శుభ వివాహం</span>
+            <span class="script-item" data-lang="kn" lang="kn">ಶುಭ ವಿವಾಹ</span>
+            <span class="script-item" data-lang="sa" lang="sa">शुभ विवाह</span>
+          </span>
+          <svg aria-hidden="true" focusable="false"><use href="#flourish"/></svg>
+        </p>
         <p class="lead">With the blessings of the Almighty and our elders, we joyfully invite you and your family to the auspicious wedding of</p>
       </section>
 
@@ -1047,6 +1138,55 @@ html.export .petals, html.export .music, html.export .back { display: none !impo
   // On by default: this works right away after a tap on the invitation page in some browsers, and
   // otherwise with the guest's first tap.
   if (!musicOff) play();
+
+  /* ---------- Multilingual Script Transition (Telugu -> Kannada -> Sanskrit) ---------- */
+  (function initScriptCycler() {
+    var cycles = Array.prototype.slice.call(document.querySelectorAll('[data-script-cycle]'));
+    if (!cycles.length || document.documentElement.classList.contains('export')) return;
+
+    var currentIndex = 0;
+    var total = 3;
+    var cycleTimer = null;
+    var holdDuration = 4200;
+    var transitionDuration = 950;
+
+    function transitionStep() {
+      var prevIndex = currentIndex;
+      currentIndex = (currentIndex + 1) % total;
+
+      cycles.forEach(function (cycle) {
+        var items = Array.prototype.slice.call(cycle.querySelectorAll('.script-item'));
+        if (items.length < total) return;
+
+        var prevItem = items[prevIndex];
+        var nextItem = items[currentIndex];
+
+        if (prevItem) {
+          prevItem.classList.remove('is-active');
+          prevItem.classList.add('is-leaving');
+          setTimeout(function () {
+            prevItem.classList.remove('is-leaving');
+          }, transitionDuration);
+        }
+
+        if (nextItem) {
+          nextItem.classList.remove('is-leaving');
+          nextItem.classList.add('is-active');
+        }
+      });
+    }
+
+    cycleTimer = setInterval(transitionStep, holdDuration);
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        if (cycleTimer) clearInterval(cycleTimer);
+        cycleTimer = null;
+      } else {
+        if (!cycleTimer) cycleTimer = setInterval(transitionStep, holdDuration);
+      }
+    });
+  })();
 })();
 </script>
 </body>
